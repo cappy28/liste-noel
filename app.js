@@ -19,50 +19,61 @@
   );
 
   const scenes = [
-    {
-      id: "setup",
-      word: "PLAY.",
-      category: "POUR JOUER",
-      title: "Le setup complet.",
+  {
+    id: "setup",
+    word: "PLAY.",
+    category: "LE SETUP SOUS LE SAPIN",
+    title: "Prêt pour la prochaine partie.",
 
-      description:
-        "La tour, l’écran, le clavier et la souris. " +
-        "L’écran est choisi, le reste se décide ensemble.",
+    description:
+      "L’écran AOC et le pack Logitech pour le clavier et la souris. " +
+      "Il ne reste qu’à choisir la tour ensemble.",
 
-      tagLabel: "BUDGET ÉCRAN",
-      tagValue: "99 €",
-      tagNote: "Objectif, prix à vérifier.",
+    tagLabel: "L’ÉCRAN AOC",
+    tagValue: "99,99 €",
+    tagNote: "Prix repéré.",
 
-      link: "https://www.aoc.com/fr/gaming/monitors/27g4xed",
-      linkLabel: "Voir l’AOC 27G4XED",
+    link: "https://www.aoc.com/fr/gaming/monitors/27g4xed",
+    linkLabel: "Voir l’AOC 27G4XED",
 
-      facts: ["27 pouces", "180 Hz", "Fast IPS", "Full HD"],
+    facts: [
+      "27 pouces",
+      "180 Hz",
+      "Fast IPS",
+      "Full HD",
+      "Clavier + souris MK950 : 70,50 € avec coupons"
+    ],
 
-      credit: "Photo officielle AOC — modèle 27G4XED."
-    },
+    credit: "Photo officielle AOC — modèle 27G4XED."
+  },
 
-    {
-      id: "audio",
-      word: "SOUND.",
-      category: "POUR ÉCOUTER",
-      title: "Nothing Ear (3).",
+  {
+    id: "audio",
+    word: "SOUND.",
+    category: "LA MUSIQUE SOUS LE SAPIN",
+    title: "Nothing Ear (3).",
 
-      description:
-        "Les écouteurs que j’aimerais pour ma musique au quotidien. " +
-        "Pour le coloris, on peut choisir ensemble.",
+    description:
+      "Les écouteurs que j’aimerais pour ma musique au quotidien. " +
+      "Le modèle exact : Nothing Ear (3).",
 
-      tagLabel: "LE MODÈLE EXACT",
-      tagValue: "Ear (3)",
-      tagNote: "Coloris à choisir.",
+    tagLabel: "LES ÉCOUTEURS",
+    tagValue: "119 €",
+    tagNote: "Prix repéré.",
 
-      link: "https://fr.nothing.tech/products/ear-3",
-      linkLabel: "Voir les Nothing Ear (3)",
+    link: "https://fr.nothing.tech/products/ear-3",
+    linkLabel: "Voir les Nothing Ear (3)",
 
-      facts: ["Nothing", "Ear (3)", "Coloris à choisir"],
+    facts: [
+      "Nothing",
+      "Ear (3)",
+      "119 €",
+      "Coloris à choisir"
+    ],
 
-      credit: "Photo officielle Nothing — coloris blanc présenté."
-    }
-  ];
+    credit: "Photo officielle Nothing — coloris blanc présenté."
+  }
+];
 
   let activeScene = 0;
   let busy = false;

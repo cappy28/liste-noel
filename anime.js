@@ -2,286 +2,335 @@
   "use strict";
 
   const $ = (selector) => document.querySelector(selector);
-
-  const stage = $("#showroom");
-  const video = $("#screen-video");
-  const screen = $("#screen");
-  const dialog = $("#wishlist");
-  const wipe = $("#wipe");
-  const tilt = $("#product-tilt");
-  const videoButton = $("#video-toggle");
-  const motionButton = $("#motion-toggle");
-
-  const choices = [...document.querySelectorAll(".scene-choice")];
-
-  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
+  const $$ = (selector) => [...document.querySelectorAll(selector)];
 
   const animate = window.anime?.animate;
   const stagger = window.anime?.stagger;
 
-  let current = 0;
-  let busy = false;
-  let motion = !reducedMotion.matches;
-  let wantsVideo = motion;
-  let stageVisible = true;
-  let localVideoURL = null;
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
 
-  const scenes = [
-    {
-      word: "PLAY.",
-      color: "#b9cef5",
-      label: "01 / LE SETUP",
-      title: "Le setup complet.",
-      description:
-        "La tour, l’écran, le clavier et la souris. " +
-        "Les modèles se choisissent ensemble.",
-      ticketLabel: "BUDGET ÉCRAN",
-      ticketValue: "99 €",
-      ticketNote: "Objectif, pas prix confirmé.",
-      link: "https://www.aoc.com/fr/gaming/monitors/24g4xe",
-      linkLabel: "Voir l’écran de référence",
-      note: "Photo : AOC 24G4XE. Modèle provisoire, prix à confirmer."
-    },
-    {
-      word: "SOUND.",
-      color: "#fa7955",
-      label: "02 / LES ÉCOUTEURS",
-      title: "Nothing Ear (3).",
-      description:
-        "Le modèle que j’aimerais pour ma musique au quotidien. " +
-        "Le coloris, on le choisit ensemble.",
-      ticketLabel: "LE MODÈLE EXACT",
-      ticketValue: "(3)",
-      ticketNote: "Nothing Ear (3).",
-      link: "https://fr.nothing.tech/products/ear-3",
-      linkLabel: "Voir les Nothing Ear (3)",
-      note: "Photo officielle Nothing. Le blanc est présenté ici."
-    }
-  ];
+  const video = $("#screen-video");
+  const videoButton = $("#video-toggle");
+  const videoStatus = $("#video-status");
+  const screen = $("#monitor-screen");
+
+  const monitorFigure = $("#monitor-figure");
+  const monitorScroll = $("#monitor-scroll");
+  const tilt = $("#monitor-tilt");
+
+  const audio = $("#audio");
+  const audioPhoto = $("#audio-photo");
+  const dialog = $("#wishlist");
+
+  const runningAnimations = new Set();
+
+  let motion = !reducedMotion.matches;
+  let monitorVisible = false;
+  let wantsPlayback = motion && !navigator.connection?.saveData;
+  let videoFailed = false;
+  let localVideoURL = null;
+  let previousOverflow = "";
 
   /*
-   * CHANGEMENT DE SCÈNE
+   * ANIME.JS
+   *
+   * Rien n’est masqué par défaut :
+   * la page reste lisible si la bibliothèque ne charge pas.
    */
 
-  function buildWord(text) {
-    const fragment = document.createDocumentFragment();
+  function playAnimation(targets, options) {
+    if (!animate || !motion) return;
 
-    for (const character of text) {
-      const span = document.createElement("span");
-      span.textContent = character;
-      fragment.append(span);
-    }
+    const instance = animate(targets, {
+      ...options,
+      onComplete: (self) => {
+        runningAnimations.delete(self);
+        options.onComplete?.(self);
+      }
+    });
 
-    $("#big-word").replaceChildren(fragment);
+    runningAnimations.add(instance);
+    return instance;
   }
 
-  function renderScene(index) {
-    current = index;
-    const scene = scenes[index];
+  function animateCounter(element) {
+    if (!animate || !motion) return;
 
-    stage.style.backgroundColor = scene.color;
+    const end = Number(element.dataset.count);
+    const state = { value: 0 };
 
-    buildWord(scene.word);
+    playAnimation(state, {
+      value: end,
+      duration: 1300,
+      ease: "outExpo",
 
-    $("#scene-label").textContent = scene.label;
-    $("#product-title").textContent = scene.title;
-    $("#product-description").textContent = scene.description;
-
-    $("#ticket-label").textContent = scene.ticketLabel;
-    $("#ticket-value").textContent = scene.ticketValue;
-    $("#ticket-note").textContent = scene.ticketNote;
-
-    $("#product-link").href = scene.link;
-    $("#product-link-label").textContent = scene.linkLabel;
-    $("#scene-note").textContent = scene.note;
-
-    $("#scene-counter").textContent = `0${index + 1} — 02`;
-
-    $("#gaming-product").hidden = index !== 0;
-    $("#audio-product").hidden = index !== 1;
-    $("#video-tools").hidden = index !== 0;
-
-    $("#video-status").hidden = index !== 0;
-
-    $("#switch-indicator").style.transform =
-      `translateX(${index * 100}%)`;
-
-    choices.forEach((button, buttonIndex) => {
-      button.setAttribute("aria-pressed", String(buttonIndex === index));
-    });
-
-    syncPlayback();
-  }
-
-  function enterScene() {
-    if (!motion || !animate) return;
-
-    animate("#big-word span", {
-      translateY: { from: 150, to: 0 },
-      opacity: { from: 0, to: 1 },
-      delay: stagger(45),
-      duration: 850,
-      ease: "outExpo"
-    });
-
-    animate(".product-enter", {
-      translateY: { from: 75, to: 0 },
-      scale: { from: 0.83, to: 1 },
-      opacity: { from: 0, to: 1 },
-      duration: 1100,
-      ease: "outExpo"
-    });
-
-    animate(".ticket-enter", {
-      scale: { from: 0.5, to: 1 },
-      opacity: { from: 0, to: 1 },
-      delay: 160,
-      duration: 750,
-      ease: "outBack"
-    });
-
-    animate(".scene-copy, .scene-actions", {
-      translateY: { from: 22, to: 0 },
-      opacity: { from: 0, to: 1 },
-      delay: stagger(80, { start: 180 }),
-      duration: 650,
-      ease: "outCubic"
-    });
-  }
-
-  function changeScene(index) {
-    if (index === current || busy) return;
-
-    resetTilt();
-
-    if (!motion || !animate) {
-      renderScene(index);
-      $("#scene-announcement").textContent = scenes[index].title;
-      return;
-    }
-
-    busy = true;
-    wipe.style.backgroundColor = scenes[index].color;
-
-    animate(wipe, {
-      translateX: { from: "-101%", to: "0%" },
-      duration: 380,
-      ease: "inOutQuart",
+      onUpdate: () => {
+        element.textContent = Math.round(state.value);
+      },
 
       onComplete: () => {
-        renderScene(index);
-
-        animate(wipe, {
-          translateX: { from: "0%", to: "101%" },
-          duration: 520,
-          ease: "inOutQuart",
-
-          onComplete: () => {
-            busy = false;
-            $("#scene-announcement").textContent = scenes[index].title;
-          }
-        });
-
-        enterScene();
+        element.textContent = end;
       }
     });
   }
 
-  choices.forEach((button) => {
-    button.addEventListener("click", () => {
-      changeScene(Number(button.dataset.scene));
+  function reveal(element) {
+    playAnimation(element, {
+      opacity: { from: 0, to: 1 },
+      translateY: { from: 28, to: 0 },
+      duration: 900,
+      ease: "outCubic"
+    });
+
+    element.querySelectorAll("[data-count]").forEach(animateCounter);
+  }
+
+  if ("IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          reveal(entry.target);
+          revealObserver.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -20px 0px"
+      }
+    );
+
+    $$("[data-reveal]").forEach((element) => {
+      revealObserver.observe(element);
+    });
+  }
+
+  function intro() {
+    if (!animate || !motion) return;
+
+    playAnimation("[data-heading]", {
+      translateY: { from: "110%", to: "0%" },
+      opacity: { from: 0, to: 1 },
+      delay: stagger(110),
+      duration: 1150,
+      ease: "outExpo"
+    });
+
+    playAnimation("[data-intro]", {
+      translateY: { from: 20, to: 0 },
+      opacity: { from: 0, to: 1 },
+      delay: stagger(100, { start: 180 }),
+      duration: 800,
+      ease: "outCubic"
+    });
+  }
+
+  /*
+   * DÉFILEMENT
+   *
+   * Une mise à jour par image demandée, pas de boucle
+   * permanente quand la page est immobile.
+   */
+
+  let scrollFrame = 0;
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function paintScroll() {
+    scrollFrame = 0;
+
+    const available =
+      document.documentElement.scrollHeight - window.innerHeight;
+
+    const progress =
+      available > 0 ? clamp(window.scrollY / available, 0, 1) : 0;
+
+    const audioBounds = audio.getBoundingClientRect();
+    const monitorBounds = monitorFigure.getBoundingClientRect();
+
+    const activeIndex =
+      audioBounds.top < window.innerHeight * 0.55 ? 1 : 0;
+
+    $("#reading-progress").style.transform = `scaleX(${progress})`;
+    $("#dock-marker").style.transform =
+      `translateX(${activeIndex * 100}%)`;
+
+    $$(".dock-link").forEach((link, index) => {
+      const active = index === activeIndex;
+
+      link.classList.toggle("is-active", active);
+
+      if (active) {
+        link.setAttribute("aria-current", "location");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+
+    if (!motion) {
+      monitorScroll.style.setProperty("--lift", "0px");
+      monitorScroll.style.setProperty("--lean", "0deg");
+      audioPhoto.style.setProperty("--zoom", "1");
+      return;
+    }
+
+    const monitorPosition = clamp(
+      (
+        window.innerHeight / 2 -
+        (monitorBounds.top + monitorBounds.height / 2)
+      ) / window.innerHeight,
+      -1,
+      1
+    );
+
+    monitorScroll.style.setProperty(
+      "--lift",
+      `${monitorPosition * -18}px`
+    );
+
+    monitorScroll.style.setProperty(
+      "--lean",
+      `${monitorPosition * 1.1}deg`
+    );
+
+    const audioPosition = clamp(
+      audioBounds.top / window.innerHeight,
+      -1,
+      1
+    );
+
+    audioPhoto.style.setProperty(
+      "--zoom",
+      String(1.025 + Math.abs(audioPosition) * 0.02)
+    );
+  }
+
+  function scheduleScroll() {
+    if (!scrollFrame) {
+      scrollFrame = requestAnimationFrame(paintScroll);
+    }
+  }
+
+  window.addEventListener("scroll", scheduleScroll, { passive: true });
+  window.addEventListener("resize", scheduleScroll);
+
+  $$('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const target = document.querySelector(link.getAttribute("href"));
+      if (!target) return;
+
+      event.preventDefault();
+
+      target.scrollIntoView({
+        behavior: motion ? "smooth" : "auto",
+        block: "start"
+      });
     });
   });
 
   /*
-   * INCLINAISON AVEC INERTIE
+   * INCLINAISON SUR ORDINATEUR
    *
-   * La boucle s’arrête quand le produit a rejoint sa position.
+   * Sur téléphone, le mouvement vient du défilement :
+   * aucun effet ne nécessite de survol.
    */
 
-  let frame = 0;
+  let tiltFrame = 0;
   let x = 0;
   let y = 0;
   let targetX = 0;
   let targetY = 0;
 
-  function updateTilt() {
-    x += (targetX - x) * 0.1;
-    y += (targetY - y) * 0.1;
+  function paintTilt() {
+    x += (targetX - x) * 0.12;
+    y += (targetY - y) * 0.12;
 
     tilt.style.transform =
       `perspective(1200px) rotateX(${y}deg) rotateY(${x}deg)`;
 
-    stage.style.setProperty("--drift", `${-x * 1.8}px`);
-
     const moving =
-      Math.abs(targetX - x) > 0.015 ||
-      Math.abs(targetY - y) > 0.015;
+      Math.abs(targetX - x) > 0.01 ||
+      Math.abs(targetY - y) > 0.01;
 
-    frame = moving ? requestAnimationFrame(updateTilt) : 0;
+    tiltFrame = moving ? requestAnimationFrame(paintTilt) : 0;
   }
 
-  function startTilt() {
-    if (!frame) frame = requestAnimationFrame(updateTilt);
+  function requestTilt() {
+    if (!tiltFrame) tiltFrame = requestAnimationFrame(paintTilt);
   }
 
   function resetTilt() {
     targetX = 0;
     targetY = 0;
 
-    if (motion) {
-      startTilt();
+    if (motion && !document.hidden) {
+      requestTilt();
     } else {
-      cancelAnimationFrame(frame);
-      frame = 0;
+      cancelAnimationFrame(tiltFrame);
+      tiltFrame = 0;
       x = 0;
       y = 0;
       tilt.style.transform = "";
-      stage.style.setProperty("--drift", "0px");
     }
   }
 
-  stage.addEventListener("pointermove", (event) => {
-    if (!motion || !finePointer.matches || busy) return;
+  monitorFigure.addEventListener("pointermove", (event) => {
+    if (!motion || !finePointer.matches || dialog.open) return;
 
-    const bounds = stage.getBoundingClientRect();
+    const bounds = monitorFigure.getBoundingClientRect();
 
     targetX =
-      ((event.clientX - bounds.left) / bounds.width - 0.5) * 12;
+      ((event.clientX - bounds.left) / bounds.width - 0.5) * 9;
 
     targetY =
-      (0.5 - (event.clientY - bounds.top) / bounds.height) * 8;
+      (0.5 - (event.clientY - bounds.top) / bounds.height) * 6;
 
-    startTilt();
+    requestTilt();
   });
 
-  stage.addEventListener("pointerleave", resetTilt);
+  monitorFigure.addEventListener("pointerleave", resetTilt);
 
   /*
-   * VIDÉO : PAS DE SON IMPOSÉ, PAS DE LECTURE HORS CHAMP
+   * VIDÉO
+   *
+   * Le fichier n’est chargé que lorsqu’une lecture est demandée.
+   * La vidéo se met en pause hors champ et derrière la liste.
    */
 
   video.muted = true;
 
   function updateVideoButton() {
-    videoButton.textContent = video.paused
-      ? "Lire la vidéo"
-      : "Pause vidéo";
+    videoButton.textContent = videoFailed
+      ? "Réessayer"
+      : video.paused
+        ? "Lire la vidéo"
+        : "Mettre en pause";
   }
 
   function syncPlayback() {
-    const asleep = document.hidden || !stageVisible || dialog.open;
+    const asleep =
+      document.hidden ||
+      !monitorVisible ||
+      dialog.open;
+
     document.body.classList.toggle("asleep", asleep);
 
     const shouldPlay =
-      current === 0 &&
-      wantsVideo &&
-      !asleep;
+      wantsPlayback &&
+      !asleep &&
+      !videoFailed;
 
     if (!shouldPlay) {
       video.pause();
       return;
+    }
+
+    if (!video.getAttribute("src")) {
+      video.src = video.dataset.src;
     }
 
     const request = video.play();
@@ -295,50 +344,58 @@
 
   video.addEventListener("loadeddata", () => {
     screen.classList.add("ready");
-    videoButton.disabled = false;
-    syncPlayback();
+    videoFailed = false;
+    updateVideoButton();
   });
 
   video.addEventListener("play", updateVideoButton);
   video.addEventListener("pause", updateVideoButton);
 
-  video.addEventListener("timeupdate", () => {
-    const progress =
-      Number.isFinite(video.duration) && video.duration > 0
-        ? video.currentTime / video.duration
-        : 0;
-
-    $("#video-progress").style.transform = `scaleX(${progress})`;
-  });
-
   video.addEventListener("error", () => {
+    videoFailed = true;
     screen.classList.remove("ready");
-    videoButton.disabled = true;
 
-    $("#video-status").textContent =
-      "Vidéo indisponible. Tu peux choisir ton propre fichier vidéo.";
+    videoStatus.textContent =
+      "La vidéo est indisponible. Tu peux choisir ton propre fichier.";
+
+    updateVideoButton();
   });
 
   videoButton.addEventListener("click", () => {
-    wantsVideo = video.paused;
+    if (videoFailed) {
+      videoFailed = false;
+      wantsPlayback = true;
+      video.load();
+    } else {
+      wantsPlayback = video.paused;
+    }
+
     syncPlayback();
   });
 
   if ("IntersectionObserver" in window) {
-    new IntersectionObserver(([entry]) => {
-      stageVisible = entry.isIntersecting;
-      syncPlayback();
-    }, { threshold: 0.15 }).observe(stage);
+    new IntersectionObserver(
+      ([entry]) => {
+        monitorVisible = entry.isIntersecting;
+        syncPlayback();
+      },
+      { threshold: 0.15 }
+    ).observe(monitorFigure);
+  } else {
+    monitorVisible = true;
   }
 
-  document.addEventListener("visibilitychange", syncPlayback);
+  document.addEventListener("visibilitychange", () => {
+    resetTilt();
+    syncPlayback();
+  });
 
   window.addEventListener("pagehide", () => video.pause());
   window.addEventListener("pageshow", syncPlayback);
 
   /*
    * APERÇU D’UN GAMEPLAY PERSONNEL
-   * Le fichier reste sur l’appareil.
+   * Aucun fichier sélectionné n’est envoyé à un serveur.
    */
 
   $("#choose-video").addEventListener("click", () => {
@@ -350,7 +407,7 @@
     if (!file) return;
 
     if (file.type && !file.type.startsWith("video/")) {
-      $("#video-status").textContent = "Choisis un fichier vidéo.";
+      videoStatus.textContent = "Choisis un fichier vidéo.";
       event.target.value = "";
       return;
     }
@@ -358,40 +415,75 @@
     video.pause();
     screen.classList.remove("ready");
 
-    if (localVideoURL) URL.revokeObjectURL(localVideoURL);
+    if (localVideoURL) {
+      URL.revokeObjectURL(localVideoURL);
+    }
 
     localVideoURL = URL.createObjectURL(file);
+
+    videoFailed = false;
+    wantsPlayback = true;
     video.src = localVideoURL;
-    videoButton.disabled = false;
-
-    wantsVideo = true;
     video.load();
-    syncPlayback();
 
-    $("#video-status").textContent =
-      `${file.name} — aperçu local, non enregistré dans le site.`;
+    videoStatus.textContent =
+      `${file.name} — aperçu local uniquement, non enregistré dans le site.`;
 
     event.target.value = "";
+    syncPlayback();
   });
 
   /*
-   * COMMANDE GLOBALE DES ANIMATIONS
+   * IMAGES : PAS DE FAUX PRODUIT EN CAS D’ÉCHEC.
+   */
+
+  $$("[data-product-image]").forEach((image) => {
+    const showError = () => {
+      const visual = image.closest("[data-visual]");
+      const fallback = visual?.querySelector(".image-fallback");
+
+      if (fallback) fallback.hidden = false;
+    };
+
+    image.addEventListener("error", showError);
+
+    if (image.complete && image.naturalWidth === 0) {
+      showError();
+    }
+  });
+
+  /*
+   * ACTIVATION / DÉSACTIVATION DES MOUVEMENTS
    */
 
   function applyMotion() {
     document.body.classList.toggle("motion", motion);
 
-    motionButton.textContent =
-      `Animations : ${motion ? "oui" : "non"}`;
+    $("#motion-toggle").setAttribute("aria-pressed", String(motion));
+    $("#motion-toggle").setAttribute(
+      "aria-label",
+      motion
+        ? "Désactiver les animations"
+        : "Activer les animations"
+    );
 
-    motionButton.setAttribute("aria-pressed", String(motion));
+    if (!motion) {
+      [...runningAnimations].forEach((instance) => {
+        instance.complete();
+      });
 
-    wantsVideo = motion;
+      runningAnimations.clear();
+      wantsPlayback = false;
+    } else {
+      wantsPlayback = !navigator.connection?.saveData;
+    }
+
     resetTilt();
+    scheduleScroll();
     syncPlayback();
   }
 
-  motionButton.addEventListener("click", () => {
+  $("#motion-toggle").addEventListener("click", () => {
     motion = !motion;
     applyMotion();
   });
@@ -402,53 +494,69 @@
   });
 
   /*
-   * LA VERSION SIMPLE POUR LES PARENTS
+   * LISTE POUR LES PARENTS
    */
 
-  $("#open-list").addEventListener("click", () => {
-    if (dialog.open) return;
+  $$("[data-open-list]").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (dialog.open) return;
 
-    dialog.showModal();
-    syncPlayback();
+      previousOverflow = document.body.style.overflow;
+      dialog.showModal();
+      document.body.style.overflow = "hidden";
 
-    if (motion && animate) {
-      animate(dialog, {
-        translateY: { from: 25, to: 0 },
+      syncPlayback();
+
+      playAnimation(dialog, {
+        translateY: { from: 45, to: 0 },
         opacity: { from: 0, to: 1 },
-        duration: 450,
-        ease: "outCubic"
+        duration: 500,
+        ease: "outExpo"
       });
 
-      animate(".gift-row", {
-        translateY: { from: 20, to: 0 },
-        opacity: { from: 0, to: 1 },
-        delay: stagger(100, { start: 100 }),
-        duration: 550,
-        ease: "outCubic"
-      });
-    }
+      if (stagger) {
+        playAnimation(".gift-list li", {
+          translateY: { from: 18, to: 0 },
+          opacity: { from: 0, to: 1 },
+          delay: stagger(85, { start: 80 }),
+          duration: 650,
+          ease: "outCubic"
+        });
+      }
+    });
   });
 
-  dialog.addEventListener("close", syncPlayback);
+  dialog.addEventListener("close", () => {
+    document.body.style.overflow = previousOverflow;
+    scheduleScroll();
+    syncPlayback();
+  });
 
   const listText = [
     "MA LISTE DE NOËL",
     "",
-    "01 — Un PC gamer complet",
-    "La tour, un écran AOC, un clavier et une souris.",
-    "Budget visé pour l’écran : 99 €. Prix et modèle à confirmer.",
-    "Configuration à choisir ensemble selon le budget.",
+    "01 — UN PC GAMER COMPLET",
+    "La tour, l’écran, le clavier et la souris.",
     "",
-    "02 — Des Nothing Ear (3)",
+    "Écran choisi : AOC 27G4XED.",
+    "27 pouces, 180 Hz, Fast IPS, Full HD, 1 ms GtG.",
+    "Budget visé pour l’écran : 99 €, prix à vérifier.",
+    "La tour, le clavier et la souris sont à choisir ensemble.",
+    "https://www.aoc.com/fr/gaming/monitors/27g4xed",
+    "",
+    "02 — DES NOTHING EAR (3)",
+    "Le modèle exact est Ear (3).",
     "Coloris à choisir ensemble.",
-    "Modèle exact : https://fr.nothing.tech/products/ear-3",
+    "https://fr.nothing.tech/products/ear-3",
     "",
     "Ce sont des idées, pas des obligations. Merci !"
   ].join("\n");
 
   $("#copy-list").addEventListener("click", async () => {
     try {
-      if (!navigator.clipboard) throw new Error("Copie indisponible");
+      if (!navigator.clipboard) {
+        throw new Error("Copie automatique indisponible");
+      }
 
       await navigator.clipboard.writeText(listText);
 
@@ -467,11 +575,29 @@
     }
   });
 
+  if (navigator.share) {
+    $("#share-list").hidden = false;
+
+    $("#share-list").addEventListener("click", async () => {
+      try {
+        await navigator.share({
+          title: "Ma liste de Noël",
+          text: listText
+        });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          $("#copy-status").textContent =
+            "Le partage n’a pas abouti. Tu peux copier la liste.";
+        }
+      }
+    });
+  }
+
   /*
    * DÉMARRAGE
    */
 
-  renderScene(0);
   applyMotion();
-  enterScene();
+  intro();
+  scheduleScroll();
 })();

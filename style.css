@@ -1363,3 +1363,138 @@ body:not(.motion) *::after {
     font-size: 38px;
   }
 }
+
+/* PHOTO DU PACK LOGITECH */
+
+.combo-visual {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 2 / 1;
+  margin: 0 0 22px;
+  border: 1px solid rgb(255 255 255 / .08);
+  background: #000;
+}
+
+.combo-visual img {
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  /*
+    Le visuel envoyé est carré avec de grandes marges.
+    Ce cadrage met le clavier et la souris en avant.
+  */
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+
+.combo-offer-note {
+  margin-top: 10px;
+  color: #626d58;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+/* PARTICIPATION PERSONNELLE */
+
+.contribution-card {
+  display: flex;
+  align-items: start;
+  gap: 18px;
+  margin-top: 14px;
+  padding: 22px;
+  border: 1px dashed #9da98e;
+  background: #f7f3e9;
+}
+
+.contribution-symbol {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--green);
+  border-radius: 50%;
+  color: var(--green);
+  font-size: 27px;
+  line-height: 1;
+}
+
+.contribution-card .eyebrow {
+  margin-bottom: 9px;
+  color: var(--green);
+}
+
+.contribution-card h3 {
+  max-width: 520px;
+  font-size: clamp(19px, 2.2vw, 27px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -.045em;
+}
+
+.contribution-card p {
+  max-width: 520px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* PARTICIPATION DANS LA LISTE À PARTAGER */
+
+.dialog-contribution {
+  margin-top: 24px;
+  padding: 17px;
+  border-left: 3px solid var(--green);
+  background: #e6eadc;
+  color: #55614c;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.dialog-contribution strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* TÉLÉPHONE */
+
+@media (max-width: 760px) {
+  .combo-visual {
+    margin-bottom: 18px;
+    aspect-ratio: 1.9 / 1;
+  }
+
+  .combo-heading {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .coupon-label {
+    white-space: normal;
+  }
+
+  .contribution-card {
+    gap: 13px;
+    padding: 17px;
+  }
+
+  .contribution-symbol {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 23px;
+  }
+
+  .contribution-card h3 {
+    font-size: 21px;
+  }
+
+  .contribution-card p {
+    font-size: 11px;
+  }
+}
+

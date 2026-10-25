@@ -26,8 +26,8 @@
     title: "Prêt pour la prochaine partie.",
 
     description:
-      "L’écran AOC et le pack Logitech pour le clavier et la souris. " +
-      "Il ne reste qu’à choisir la tour ensemble.",
+  "La tour, l’écran AOC et le pack clavier + souris Logitech. " +
+  "Je paierai une partie du PC avec mon argent de poche.",
 
     tagLabel: "L’ÉCRAN AOC",
     tagValue: "99,99 €",

@@ -1,0 +1,922 @@
+:root {
+  --paper: #f5f0e6;
+  --ink: #17231c;
+  --green: #174c36;
+  --red: #ba4036;
+  --blue: #bdd5ee;
+  --orange: #f0a47c;
+  --line: #d9d4c9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  max-width: 1500px;
+  margin: auto;
+  padding: 0 clamp(14px, 3vw, 42px) 110px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+p,
+figure {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 15px;
+  z-index: 100;
+  padding: 12px;
+  background: var(--ink);
+  color: white;
+}
+
+.skip-link:focus {
+  top: 15px;
+}
+
+.eyebrow,
+.hero-top,
+.card-top,
+.header-caption,
+.header-number,
+.setup-end > span,
+.ears-offer > span,
+.closing > span {
+  font: bold 10px/1.5 "Courier New", monospace;
+  letter-spacing: .09em;
+}
+
+/* EN-TÊTE */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88px;
+  gap: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: .9;
+  letter-spacing: -.065em;
+  text-decoration: none;
+}
+
+.brand-star {
+  color: var(--red);
+  font-size: 42px;
+  line-height: 1;
+}
+
+.header-caption {
+  color: #777d73;
+}
+
+.header-number {
+  padding: 8px 10px;
+  border: 1px solid var(--ink);
+}
+
+/* GRANDE SCÈNE */
+
+.hero {
+  position: relative;
+  min-height: min(680px, 72svh);
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--ink);
+}
+
+.hero-setup {
+  background: var(--blue);
+}
+
+.hero-ears {
+  background: var(--orange);
+}
+
+.hero-top {
+  position: absolute;
+  z-index: 8;
+  top: 43px;
+  right: 28px;
+  left: 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.hero-heading {
+  position: relative;
+  z-index: 2;
+  padding: 95px 0 0 7%;
+  pointer-events: none;
+}
+
+.hero-heading > p {
+  margin-bottom: 4px;
+  font: bold 11px "Courier New", monospace;
+  letter-spacing: .12em;
+}
+
+.hero h1 {
+  font-family: Impact, "Arial Narrow", sans-serif;
+  font-size: clamp(130px, 22vw, 310px);
+  font-weight: 900;
+  line-height: .77;
+  letter-spacing: -.055em;
+}
+
+.hero h1 span {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
+}
+
+.setup-picture {
+  position: absolute;
+  z-index: 3;
+  top: 52%;
+  right: 8%;
+  width: min(56%, 700px);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 10px solid #f9f6ed;
+  background: #e5e5d9;
+  box-shadow: 18px 22px 0 rgb(23 35 28 / .16);
+  transform: translateY(-40%) rotate(3deg);
+}
+
+.setup-picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ears-picture {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: 7%;
+  width: min(58%, 680px);
+  aspect-ratio: 1;
+  transform: translateY(-42%);
+}
+
+.ears-picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 25px 17px rgb(0 0 0 / .17));
+}
+
+.hero-bottom {
+  position: absolute;
+  z-index: 7;
+  right: 28px;
+  bottom: 24px;
+  left: 28px;
+  max-width: 420px;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 1.6;
+}
+
+/* NOËL, SANS MASQUER LES PRODUITS */
+
+.lights {
+  position: absolute;
+  z-index: 10;
+  top: -15px;
+  right: -10px;
+  left: -10px;
+  display: flex;
+  justify-content: space-around;
+  height: 45px;
+  border-bottom: 2px solid var(--green);
+  border-radius: 0 0 50% 50%;
+  pointer-events: none;
+}
+
+.lights i {
+  position: relative;
+  top: 36px;
+  width: 7px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff4c6;
+  box-shadow: 0 0 12px #fff8d6;
+  animation: twinkle 2.8s infinite alternate;
+  animation-delay: var(--delay);
+}
+
+.lights i:nth-child(3n) {
+  background: var(--red);
+  box-shadow: 0 0 9px var(--red);
+}
+
+.snow {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.snow i {
+  position: absolute;
+  top: -15px;
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: white;
+  opacity: .8;
+  animation: snowfall var(--duration) linear infinite;
+  animation-delay: var(--delay);
+}
+
+/* TITRE DES CARTES */
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 65px 0 29px;
+}
+
+.eyebrow {
+  color: var(--red);
+}
+
+.section-heading h2,
+.ears-information h2 {
+  margin-top: 10px;
+  font-size: clamp(38px, 5vw, 70px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -.075em;
+}
+
+.section-heading h2 span,
+.ears-information h2 span {
+  color: var(--red);
+}
+
+.section-heading > p {
+  max-width: 240px;
+  color: #657066;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* DEUX CARTES DISTINCTES */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  background: white;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 53px;
+  padding: 15px 20px;
+  background: var(--paper);
+}
+
+.card-badge {
+  padding: 4px 7px;
+  border: 1px solid currentColor;
+}
+
+/* CARTE AOC + VIDÉO */
+
+.screen-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1.3;
+  overflow: hidden;
+  padding: 6%;
+  background: #dce7eb;
+}
+
+.aoc-monitor {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1890 / 1450;
+  overflow: hidden;
+  filter: drop-shadow(0 12px 11px rgb(0 0 0 / .15));
+}
+
+/*
+  Ces repères correspondent à la photo AOC ci-dessus.
+  Si tu changes cette photo, il faudra recaler la vidéo.
+*/
+
+.aoc-image {
+  position: absolute;
+  top: -19.3103%;
+  left: -3.1746%;
+  width: 106.4021%;
+  max-width: none;
+  height: auto;
+}
+
+.aoc-screen {
+  position: absolute;
+  top: 2.1%;
+  left: 1.4%;
+  width: 97.2%;
+  height: 71.7%;
+  overflow: hidden;
+  background: #101513;
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+
+.aoc-screen.is-playing {
+  opacity: 1;
+}
+
+.aoc-screen video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* LOGITECH : FOND VERT, CLAVIER FIXE */
+
+.combo-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1.3;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 35%, #f4faeb, #d8e8ca 75%);
+}
+
+.combo-art {
+  position: relative;
+  width: 86%;
+  height: 76%;
+}
+
+.keyboard-image {
+  position: absolute;
+  bottom: 9%;
+  left: 0;
+  width: 79%;
+  height: 78%;
+  object-fit: contain;
+  filter: drop-shadow(0 13px 7px rgb(34 64 30 / .18));
+}
+
+/*
+  Le clavier n’a aucune animation.
+  Seule la souris ci-dessous se déplace.
+*/
+
+.mouse-move {
+  position: absolute;
+  right: 0;
+  bottom: 20%;
+  width: 23%;
+  height: 48%;
+  transform:
+    translate(var(--mouse-x, 0px), var(--mouse-y, 0px))
+    rotate(var(--mouse-rotation, 0deg));
+  transition: transform 180ms ease-out;
+}
+
+.mouse-idle {
+  width: 100%;
+  height: 100%;
+  animation: mouse-breathe 3.2s ease-in-out infinite;
+}
+
+.mouse-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 6px rgb(34 64 30 / .2));
+}
+
+.mouse-move.mouse-click {
+  animation: mouse-click 550ms ease;
+}
+
+.mouse-hint {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  left: 14px;
+  color: #54714e;
+  font: bold 9px "Courier New", monospace;
+  text-align: center;
+}
+
+/* TEXTE DES CARTES */
+
+.card-info {
+  padding: 23px;
+  border-top: 1px solid var(--ink);
+}
+
+.product-name {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.product-name h3 {
+  margin-top: 7px;
+  font-size: clamp(24px, 2.5vw, 35px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.06em;
+}
+
+.price {
+  flex-shrink: 0;
+  font-size: clamp(22px, 2.5vw, 34px);
+  font-weight: 600;
+  letter-spacing: -.06em;
+  white-space: nowrap;
+}
+
+.card-info > p {
+  margin-top: 16px;
+  color: #657066;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.card-actions button,
+.card-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.card-actions a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.card-info small {
+  display: block;
+  margin-top: 10px;
+  color: #777d73;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* PARTICIPATION ET TOTAL */
+
+.participation {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin-top: 17px;
+  padding: 20px;
+  border: 1px solid #9cad8f;
+  background: #e3ecd8;
+}
+
+.participation-icon {
+  display: grid;
+  place-items: center;
+  width: 41px;
+  height: 41px;
+  flex: 0 0 41px;
+  border-radius: 50%;
+  background: var(--green);
+  color: white;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.participation .eyebrow {
+  color: var(--green);
+}
+
+.participation p {
+  margin-top: 5px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.setup-end {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 23px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.setup-end strong {
+  margin-left: auto;
+  font-size: 25px;
+  letter-spacing: -.05em;
+  white-space: nowrap;
+}
+
+.setup-end small {
+  color: #657066;
+}
+
+/* PAGE EAR (3) */
+
+.ears-information {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 65px 0 45px;
+}
+
+.ears-information p {
+  max-width: 440px;
+  margin-top: 18px;
+  color: #657066;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.ears-offer {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 10px;
+  min-width: 170px;
+}
+
+.ears-offer strong {
+  font-size: 54px;
+  font-weight: 600;
+  letter-spacing: -.07em;
+}
+
+.ears-offer a {
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ink);
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* FIN + NAVIGATION */
+
+.closing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 35px 0;
+}
+
+.closing strong {
+  color: var(--red);
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: -.05em;
+}
+
+.switcher {
+  position: fixed;
+  z-index: 30;
+  right: 20px;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: min(370px, calc(100% - 40px));
+  margin-inline: auto;
+  padding: 5px;
+  border: 1px solid #42634b;
+  border-radius: 14px;
+  background: var(--green);
+  box-shadow: 0 12px 30px rgb(0 0 0 / .22);
+}
+
+.switcher button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.switcher button[aria-pressed="true"] {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.switcher button span {
+  margin-right: 6px;
+  font: 10px "Courier New", monospace;
+}
+
+/* TRANSITION PAPIER CADEAU */
+
+.transition {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--green);
+  color: white;
+  pointer-events: none;
+  transform: translateX(-101%);
+}
+
+.transition-ribbon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 45%;
+  width: 10%;
+  background: var(--red);
+}
+
+.transition > span {
+  position: relative;
+  padding: 18px 25px;
+  background: var(--paper);
+  color: var(--green);
+  font: italic clamp(30px, 6vw, 70px) Georgia, serif;
+  transform: rotate(-6deg);
+}
+
+/* IMAGES MANQUANTES */
+
+.asset-error {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  padding: 20px;
+  background: #e2e9d9;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.asset-error strong {
+  display: block;
+}
+
+[data-image-stage].missing img,
+[data-image-stage].missing .aoc-screen {
+  visibility: hidden;
+}
+
+/* ANIMATIONS */
+
+@keyframes twinkle {
+  from { opacity: .35; }
+  to { opacity: 1; }
+}
+
+@keyframes snowfall {
+  to {
+    transform: translate(25px, 740px);
+  }
+}
+
+@keyframes mouse-breathe {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-6px) rotate(3deg); }
+}
+
+@keyframes mouse-click {
+  0%, 100% { translate: 0 0; }
+  35% { translate: 12px -8px; }
+  70% { translate: -5px 3px; }
+}
+
+/* TÉLÉPHONE */
+
+@media (max-width: 780px) {
+  body {
+    padding-inline: 12px;
+  }
+
+  .header {
+    min-height: 75px;
+  }
+
+  .header-caption {
+    display: none;
+  }
+
+  .brand {
+    font-size: 14px;
+  }
+
+  .brand-star {
+    font-size: 35px;
+  }
+
+  .hero {
+    min-height: 570px;
+  }
+
+  .hero-top {
+    top: 42px;
+    right: 18px;
+    left: 18px;
+    font-size: 8px;
+  }
+
+  .hero-heading {
+    padding: 110px 0 0 6%;
+  }
+
+  .hero h1 {
+    font-size: clamp(115px, 27vw, 210px);
+  }
+
+  .setup-picture {
+    top: 58%;
+    right: 7%;
+    width: 83%;
+    border-width: 6px;
+  }
+
+  .ears-picture {
+    top: 57%;
+    right: 4%;
+    width: 90%;
+  }
+
+  .hero-bottom {
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    font-size: 11px;
+  }
+
+  .section-heading {
+    display: block;
+    padding-top: 44px;
+  }
+
+  .section-heading > p {
+    margin-top: 14px;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .product-name h3 {
+    font-size: 27px;
+  }
+
+  .price {
+    font-size: 25px;
+  }
+
+  .setup-end {
+    flex-wrap: wrap;
+  }
+
+  .setup-end small {
+    width: 100%;
+  }
+
+  .ears-information {
+    align-items: start;
+    flex-direction: column;
+    gap: 25px;
+    padding-top: 45px;
+  }
+
+  .ears-offer {
+    align-items: start;
+  }
+
+  .closing > span {
+    max-width: 155px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero {
+    min-height: 500px;
+  }
+
+  .hero h1 {
+    font-size: 28vw;
+  }
+
+  .hero-top span:last-child {
+    display: none;
+  }
+
+  .product-name {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .snow {
+    display: none;
+  }
+
+  .mouse-move {
+    transform: none !important;
+  }
+}

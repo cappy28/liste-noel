@@ -451,24 +451,36 @@
   });
 
   const listText = [
-    "MA LISTE DE NOËL",
-    "",
-    "01 — UN PC GAMER COMPLET",
-    "La tour, l’écran, le clavier et la souris.",
-    "",
-    "Écran : AOC 27G4XED.",
-    "27 pouces, 180 Hz, Fast IPS, Full HD, 1 ms GtG.",
-    "Budget visé pour l’écran : 99 €, prix à vérifier.",
-    "Le reste est à choisir ensemble selon le budget.",
-    "https://www.aoc.com/fr/gaming/monitors/27g4xed",
-    "",
-    "02 — DES NOTHING EAR (3)",
-    "Le modèle exact est Ear (3).",
-    "Coloris à choisir ensemble.",
-    "https://fr.nothing.tech/products/ear-3",
-    "",
-    "Ce sont des idées, pas des obligations. Merci !"
-  ].join("\n");
+  "🎄 MA LISTE DE NOËL",
+  "",
+  "01 — UN PC GAMER COMPLET",
+  "Avec la tour, l’écran, le clavier et la souris.",
+  "La tour reste à choisir ensemble.",
+  "",
+  "ÉCRAN — AOC 27G4XED",
+  "99,99 €",
+  "27 pouces, 180 Hz, Fast IPS, Full HD.",
+  "https://www.aoc.com/fr/gaming/monitors/27g4xed",
+  "",
+  "CLAVIER + SOURIS — LOGITECH SIGNATURE SLIM COMBO MK950",
+  "70,50 € avec coupons.",
+  "Le pack comprend le clavier et la souris.",
+  "Blanc si possible, sinon le coloris le moins cher.",
+  "https://www.logi.com/fr-fr/shop/p/signature-slim-mk950",
+  "",
+  "02 — DES NOTHING EAR (3)",
+  "119 €",
+  "Le modèle exact : Nothing Ear (3).",
+  "Coloris à choisir ensemble.",
+  "https://fr.nothing.tech/products/ear-3",
+  "",
+  "TOTAL DES PRODUITS CHIFFRÉS : 289,49 €",
+  "Hors tour du PC et éventuels frais de livraison.",
+  "Prix repérés, susceptibles de changer.",
+  "Le tarif du MK950 dépend de l’application des coupons.",
+  "",
+  "Ce sont des idées, pas des obligations. Merci !"
+].join("\n");
 
   $("#copy-list").addEventListener("click", async () => {
     try {

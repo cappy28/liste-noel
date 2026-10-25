@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17352c">
+  <title>Ma liste de Noël</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="site">
+    <header class="site-header">
+      <a class="brand" href="#setup" aria-label="Ma liste de Noël, accueil">
+        <span class="brand-star" aria-hidden="true">✳</span>
+        <span>MA LISTE <strong>DE NOËL</strong></span>
+      </a>
+
+      <nav class="navigation" aria-label="Parcourir la liste">
+        <button class="nav-button is-active" type="button"
+                data-page-button="setup" aria-current="page">
+          Le setup
+        </button>
+        <button class="nav-button" type="button" data-page-button="ear">
+          Les Ear (3)
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- PAGE SETUP -->
+      <section class="page" id="setup" data-page="setup">
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Un petit projet pour Noël</p>
+            <h1>Le setup<br><em>dont je rêve.</em></h1>
+            <p class="hero-description">
+              Un PC à construire petit à petit, un écran, un clavier
+              et une souris. Pour le PC, je participe avec mon argent de poche.
+            </p>
+            <a class="text-link" href="#boitier">
+              Découvrir le boîtier <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="hero-picture">
+            <img src="assets/setup-complet.jpg"
+                 alt="Photo d'inspiration du setup complet"
+                 data-image>
+            <span class="image-help" hidden>
+              Ajoute ta photo du setup dans assets/setup-complet.jpg
+            </span>
+            <span class="photo-caption">01 / L’idée d’ensemble</span>
+          </div>
+        </div>
+
+        <!-- ANIMATION DU BOÎTIER -->
+        <section class="case-section" id="boitier" aria-labelledby="case-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow eyebrow-light">La pièce centrale</p>
+              <h2 id="case-title">Derrière le panneau.</h2>
+            </div>
+            <p>
+              Clique pour retirer le panneau latéral et découvrir
+              comment les composants prennent place dans le PC.
+            </p>
+          </div>
+
+          <div class="case-layout">
+            <div class="case-interactive">
+              <div class="case-stage" id="caseStage" role="img"
+                   aria-label="Illustration du boîtier fermé, avec son panneau latéral plein">
+                <div class="case-floor" aria-hidden="true"></div>
+
+                <div class="case-model" aria-hidden="true">
+                  <div class="case-shell">
+                    <div class="case-interior">
+                      <div class="motherboard component">
+                        <span class="motherboard-lines"></span>
+                        <span class="component-label label-board">CARTE MÈRE</span>
+                      </div>
+
+                      <div class="rear-fan component fan">
+                        <span class="fan-center"></span>
+                      </div>
+
+                      <div class="front-fan component fan">
+                        <span class="fan-center"></span>
+                      </div>
+
+                      <div class="cpu-cooler component">
+                        <span class="cooler-fan"></span>
+                        <span class="component-label">CPU</span>
+                      </div>
+
+                      <div class="ram component">
+                        <span></span><span></span>
+                      </div>
+
+                      <div class="gpu component">
+                        <span class="gpu-mark">CARTE GRAPHIQUE</span>
+                        <span class="gpu-fan"></span>
+                        <span class="gpu-fan"></span>
+                      </div>
+
+                      <div class="psu-cover component">
+                        <span>ALIMENTATION</span>
+                      </div>
+                    </div>
+
+                    <div class="case-front">
+                      <span class="front-power"></span>
+                    </div>
+
+                    <div class="case-feet"></div>
+
+                    <!-- Le vrai modèle a un panneau OPAQUE et amovible. -->
+                    <div class="side-panel">
+                      <span class="panel-edge"></span>
+                      <span class="panel-mark">be quiet!</span>
+                      <span class="panel-screw panel-screw-top"></span>
+                      <span class="panel-screw panel-screw-bottom"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="case-controls">
+                <button class="case-toggle" id="caseToggle" type="button"
+                        aria-controls="caseStage" aria-expanded="false">
+                  <span class="toggle-icon" aria-hidden="true">＋</span>
+                  <span class="toggle-text">Ouvrir le boîtier</span>
+                </button>
+                <span class="case-status" id="caseStatus" role="status">
+                  Panneau fermé
+                </span>
+              </div>
+
+              <p class="case-disclaimer">
+                Vue illustrative : les modèles des composants ne sont pas
+                encore définis.
+              </p>
+            </div>
+
+            <aside class="case-product">
+              <div class="case-product-image">
+                <img src="assets/pure-base-501-airflow-black.png"
+                     alt="Véritable boîtier be quiet! Pure Base 501 Airflow Black"
+                     data-image>
+                <span class="image-help" hidden>
+                  Ajoute une photo officielle du Pure Base 501 Airflow Black
+                  dans assets/pure-base-501-airflow-black.png
+                </span>
+              </div>
+
+              <div class="case-product-info">
+                <span class="product-number">01 / LE BOÎTIER</span>
+                <h3>Pure Base 501<br>Airflow Black</h3>
+                <p>be quiet! · Boîtier ATX · Panneau latéral plein</p>
+                <p class="not-priced">Prix à définir avec le reste du PC</p>
+                <a class="product-link"
+                   href="https://www.bequiet.com/fr/case/5322"
+                   target="_blank" rel="noopener noreferrer">
+                  Voir le modèle exact <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- ÉCRAN ET CLAVIER / SOURIS -->
+        <section class="shopping-section" aria-labelledby="shopping-title">
+          <div class="section-heading shopping-heading">
+            <div>
+              <p class="eyebrow">Pour compléter le setup</p>
+              <h2 id="shopping-title">Les autres pièces.</h2>
+            </div>
+            <p>Des références précises, pour que ce soit simple à retrouver.</p>
+          </div>
+
+          <div class="product-grid">
+            <article class="product-card">
+              <div class="product-picture screen-picture">
+                <div class="screen-preview">
+                  <img src="assets/aoc-27g4xed.png"
+                       alt="Écran AOC Gaming 27G4XED"
+                       data-image>
+                  <video class="screen-video" autoplay muted loop playsinline
+                         aria-label="Vidéo de démonstration sur l'écran">
+                    <source src="assets/video-ecran.mp4" type="video/mp4">
+                  </video>
+                </div>
+                <span class="image-help" hidden>
+                  Ajoute la vraie image de l’écran dans assets/aoc-27g4xed.png
+                </span>
+              </div>
+              <div class="product-details">
+                <span class="product-number">02 / L’ÉCRAN</span>
+                <h3>AOC Gaming 27G4XED</h3>
+                <p>27 pouces · 180 Hz · Fast IPS</p>
+                <strong class="price">99,99 €</strong>
+              </div>
+            </article>
+
+            <article class="product-card">
+              <div class="product-picture logitech-picture">
+                <img class="keyboard-image"
+                     src="assets/logitech-clavier.png"
+                     alt="Clavier du Logitech Signature Slim Combo MK950"
+                     data-image>
+                <img class="mouse-image" id="mouseImage"
+                     src="assets/logitech-souris.png"
+                     alt="Souris du Logitech Signature Slim Combo MK950"
+                     data-image>
+                <span class="image-help" hidden>
+                  Ajoute les images séparées du clavier et de la souris
+                  dans le dossier assets.
+                </span>
+              </div>
+              <div class="product-details">
+                <span class="product-number">03 / CLAVIER + SOURIS</span>
+                <h3>Logitech Signature Slim Combo MK950</h3>
+                <p>Sur Amazon · Couleur la moins chère</p>
+                <strong class="price">70,50 € <small>avec coupons</small></strong>
+                <a class="product-link"
+                   href="https://www.amazon.fr/dp/B0CTQN69N1"
+                   target="_blank" rel="noopener noreferrer">
+                  Voir sur Amazon <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          </div>
+
+          <p class="budget-note">
+            Écran + clavier/souris : <strong>170,49 €</strong>.
+            Le prix du PC n’est pas inclus ; j’en paie une partie.
+          </p>
+        </section>
+      </section>
+
+      <!-- PAGE EAR (3) : aucun produit du setup ici -->
+      <section class="page ear-page" id="ear" data-page="ear" hidden>
+        <div class="ear-layout">
+          <div class="ear-copy">
+            <p class="eyebrow">L’autre idée cadeau</p>
+            <h1>Un peu de<br><em>musique.</em></h1>
+            <p>
+              Les Nothing Ear (3). Un cadeau à part du setup,
+              avec sa propre page.
+            </p>
+            <span class="ear-price">119 €</span>
+            <span class="ear-caption">Prix repéré pour ma liste</span>
+          </div>
+
+          <div class="ear-picture">
+            <img src="assets/nothing-ear-3.png"
+                 alt="Véritable produit Nothing Ear (3)"
+                 data-image>
+            <span class="image-help" hidden>
+              Ajoute une vraie image des Nothing Ear (3)
+              dans assets/nothing-ear-3.png
+            </span>
+            <span class="ear-picture-label">NOTHING / EAR (3)</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>✳ Une liste faite avec envie, pas une commande.</span>
+      <span>Joyeux Noël ♡</span>
+    </footer>
+  </div>
+</body>
+</html>

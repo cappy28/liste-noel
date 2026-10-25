@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f0e8">
+
+  <title>Quelques idées pour Noël.</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- La bibliothèque d’animation, puis notre fichier personnel. -->
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/animejs@4.1.3/lib/anime.umd.min.js"
+  ></script>
+  <script defer src="anime.js"></script>
+</head>
+
+<body id="haut">
+  <a class="skip-link" href="#liste">Aller à ma liste</a>
+
+  <div class="page">
+    <header class="header">
+      <a class="logo" href="#haut" aria-label="Ma liste de Noël, accueil">
+        <span class="logo-symbol" aria-hidden="true">✳</span>
+        <span>MA LISTE<br>DE NOËL.</span>
+      </a>
+
+      <nav aria-label="Navigation principale">
+        <a href="#setup">Le setup</a>
+        <a href="#audio">Les écouteurs</a>
+      </nav>
+    </header>
+
+    <main id="liste">
+      <section class="intro" aria-labelledby="titre">
+        <p class="eyebrow" data-intro>
+          LISTE PERSONNELLE — ÉDITION NOËL
+        </p>
+
+        <h1 id="titre" data-intro>
+          De quoi jouer.<br>
+          <em>De quoi écouter.</em>
+        </h1>
+
+        <div class="intro-bottom" data-intro>
+          <p>
+            Deux idées qui me feraient vraiment plaisir.<br>
+            Et une façon un peu différente de vous les présenter.
+          </p>
+
+          <a class="text-link" href="#setup">
+            Ouvrir la liste <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- LE PC GAMER -->
+
+      <section id="setup" aria-labelledby="setup-title">
+        <div class="section-label">
+          <span>01 / LE PC GAMER</span>
+          <span>LA TOUR + LES PÉRIPHÉRIQUES</span>
+        </div>
+
+        <div class="stage reveal">
+          <div class="stage-heading">
+            <div>
+              <p class="eyebrow">LE SETUP QUE J’IMAGINE</p>
+              <h2 id="setup-title">
+                La partie<br><em>commence ici.</em>
+              </h2>
+            </div>
+
+            <div class="budget">
+              <span>BUDGET VISÉ POUR L’ÉCRAN</span>
+              <strong>99<span> €</span></strong>
+              <small>Référence et prix à confirmer.</small>
+            </div>
+          </div>
+
+          <div class="monitor-area">
+            <div class="monitor-tilt" id="monitor-tilt">
+              <div class="monitor" id="monitor">
+
+                <!-- Vrai visuel du produit, pas un écran dessiné. -->
+                <img
+                  class="monitor-photo"
+                  src="https://cdn.sanity.io/images/hf5b3axp/production/9fde48a49713104537d8161bafae51a679a656bd-2011x2000.png?auto=format&fit=max&w=1920"
+                  alt="Vue de face de l’écran AOC 24G4XE et de son pied."
+                  width="2011"
+                  height="2000"
+                  fetchpriority="high"
+                >
+
+                <!-- Cette zone recouvre uniquement la dalle. -->
+                <div class="monitor-screen" aria-hidden="true">
+                  <video
+                    id="screen-video"
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    tabindex="-1"
+                  >
+                    <!-- Remplace cette URL par assets/gameplay.mp4. -->
+                    <source
+                      src="https://media.w3.org/2010/05/sintel/trailer.mp4"
+                      type="video/mp4"
+                    >
+                  </video>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-bottom">
+            <p>
+              <strong>AOC 24G4XE</strong>
+              <span>Visuel de référence provisoire.</span>
+            </p>
+
+            <div class="video-actions">
+              <button
+                id="play-button"
+                type="button"
+                aria-controls="screen-video"
+              >
+                Lire la vidéo
+              </button>
+
+              <button id="choose-button" type="button">
+                Choisir ma vidéo ↗
+              </button>
+
+              <input
+                id="video-file"
+                type="file"
+                accept="video/*"
+                hidden
+              >
+            </div>
+          </div>
+
+          <p class="video-note" id="video-note" role="status">
+            Vidéo de démonstration : Sintel — © Blender Foundation.
+          </p>
+        </div>
+
+        <div class="setup-details reveal">
+          <div>
+            <p class="eyebrow">L’IDÉE, C’EST L’ENSEMBLE.</p>
+            <h3>Pas seulement<br><em>un écran.</em></h3>
+          </div>
+
+          <div>
+            <ul class="equipment">
+              <li><span>01</span> La tour gamer</li>
+              <li><span>02</span> L’écran AOC</li>
+              <li><span>03</span> Le clavier</li>
+              <li><span>04</span> La souris</li>
+            </ul>
+
+            <p class="small-note">
+              La configuration et les modèles sont à choisir ensemble,
+              selon le budget. Les 99 € concernent uniquement
+              l’objectif de budget pour l’écran.
+            </p>
+
+            <a
+              class="text-link"
+              href="https://www.aoc.com/fr/gaming/monitors/24g4xe"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Voir cet écran chez AOC
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- LES ÉCOUTEURS -->
+
+      <section class="audio-section" id="audio" aria-labelledby="audio-title">
+        <div class="section-label">
+          <span>02 / LES ÉCOUTEURS</span>
+          <span>NOTHING</span>
+        </div>
+
+        <figure class="audio-visual reveal">
+          <img
+            src="https://cdn.sanity.io/images/gtd4w1cq/production/93af6a6f88ce484e7947262a8904b378739de91a-4096x2305.jpg"
+            alt="Visuel officiel des Nothing Ear (3), en noir et en blanc."
+            width="4096"
+            height="2305"
+            loading="lazy"
+          >
+
+          <figcaption>
+            Visuel officiel Nothing — les deux coloris sont présentés.
+          </figcaption>
+        </figure>
+
+        <div class="audio-details reveal">
+          <h2 id="audio-title">Nothing<br><em>Ear (3).</em></h2>
+
+          <div>
+            <p class="eyebrow">LE MODÈLE EXACT</p>
+            <p class="body-copy">
+              Des Nothing Ear (3), pour ma musique au quotidien.
+              Pour le coloris, on peut choisir ensemble.
+            </p>
+
+            <a
+              class="text-link"
+              href="https://fr.nothing.tech/products/ear-3"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Voir les écouteurs
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="thanks reveal" aria-labelledby="merci-title">
+        <p class="eyebrow">LE PLUS IMPORTANT</p>
+        <h2 id="merci-title">Et surtout,<br><em>merci.</em></h2>
+        <p>
+          Ce sont des idées, pas des obligations.<br>
+          Si vous avez des questions, demandez-moi.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>Une petite liste. De grandes envies.</span>
+      <a href="#haut">Retour en haut ↑</a>
+    </footer>
+  </div>
+</body>
+</html>

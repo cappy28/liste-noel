@@ -2,242 +2,13 @@
   "use strict";
 
   const $ = (selector) => document.querySelector(selector);
-  const $$ = (selector) => [...document.querySelectorAll(selector)];
+  const library = window.anime;
 
-  const animate = window.anime?.animate;
-  const stagger = window.anime?.stagger;
+  const activeAnimations = new Set();
 
-  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
-
-  const video = $("#screen-video");
-  const videoButton = $("#video-toggle");
-  const videoStatus = $("#video-status");
-  const screen = $("#monitor-screen");
-
-  const monitorFigure = $("#monitor-figure");
-  const monitorScroll = $("#monitor-scroll");
-  const tilt = $("#monitor-tilt");
-
-  const audio = $("#audio");
-  const audioPhoto = $("#audio-photo");
-  const dialog = $("#wishlist");
-
-  const runningAnimations = new Set();
-
-  let motion = !reducedMotion.matches;
-  let monitorVisible = false;
-  let wantsPlayback = motion && !navigator.connection?.saveData;
-  let videoFailed = false;
-  let localVideoURL = null;
-  let previousOverflow = "";
-
-  /*
-   * ANIME.JS
-   *
-   * Rien n’est masqué par défaut :
-   * la page reste lisible si la bibliothèque ne charge pas.
-   */
-
-  function playAnimation(targets, options) {
-    if (!animate || !motion) return;
-
-    const instance = animate(targets, {
-      ...options,
-      onComplete: (self) => {
-        runningAnimations.delete(self);
-        options.onComplete?.(self);
-      }
-    });
-
-    runningAnimations.add(instance);
-    return instance;
-  }
-
-  function animateCounter(element) {
-    if (!animate || !motion) return;
-
-    const end = Number(element.dataset.count);
-    const state = { value: 0 };
-
-    playAnimation(state, {
-      value: end,
-      duration: 1300,
-      ease: "outExpo",
-
-      onUpdate: () => {
-        element.textContent = Math.round(state.value);
-      },
-
-      onComplete: () => {
-        element.textContent = end;
-      }
-    });
-  }
-
-  function reveal(element) {
-    playAnimation(element, {
-      opacity: { from: 0, to: 1 },
-      translateY: { from: 28, to: 0 },
-      duration: 900,
-      ease: "outCubic"
-    });
-
-    element.querySelectorAll("[data-count]").forEach(animateCounter);
-  }
-
-  if ("IntersectionObserver" in window) {
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-
-          reveal(entry.target);
-          revealObserver.unobserve(entry.target);
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -20px 0px"
-      }
-    );
-
-    $$("[data-reveal]").forEach((element) => {
-      revealObserver.observe(element);
-    });
-  }
-
-  function intro() {
-    if (!animate || !motion) return;
-
-    playAnimation("[data-heading]", {
-      translateY: { from: "110%", to: "0%" },
-      opacity: { from: 0, to: 1 },
-      delay: stagger(110),
-      duration: 1150,
-      ease: "outExpo"
-    });
-
-    playAnimation("[data-intro]", {
-      translateY: { from: 20, to: 0 },
-      opacity: { from: 0, to: 1 },
-      delay: stagger(100, { start: 180 }),
-      duration: 800,
-      ease: "outCubic"
-    });
-  }
-
-  /*
-   * DÉFILEMENT
-   *
-   * Une mise à jour par image demandée, pas de boucle
-   * permanente quand la page est immobile.
-   */
-
-  let scrollFrame = 0;
-
-  function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
-  }
-
-  function paintScroll() {
-    scrollFrame = 0;
-
-    const available =
-      document.documentElement.scrollHeight - window.innerHeight;
-
-    const progress =
-      available > 0 ? clamp(window.scrollY / available, 0, 1) : 0;
-
-    const audioBounds = audio.getBoundingClientRect();
-    const monitorBounds = monitorFigure.getBoundingClientRect();
-
-    const activeIndex =
-      audioBounds.top < window.innerHeight * 0.55 ? 1 : 0;
-
-    $("#reading-progress").style.transform = `scaleX(${progress})`;
-    $("#dock-marker").style.transform =
-      `translateX(${activeIndex * 100}%)`;
-
-    $$(".dock-link").forEach((link, index) => {
-      const active = index === activeIndex;
-
-      link.classList.toggle("is-active", active);
-
-      if (active) {
-        link.setAttribute("aria-current", "location");
-      } else {
-        link.removeAttribute("aria-current");
-      }
-    });
-
-    if (!motion) {
-      monitorScroll.style.setProperty("--lift", "0px");
-      monitorScroll.style.setProperty("--lean", "0deg");
-      audioPhoto.style.setProperty("--zoom", "1");
-      return;
-    }
-
-    const monitorPosition = clamp(
-      (
-        window.innerHeight / 2 -
-        (monitorBounds.top + monitorBounds.height / 2)
-      ) / window.innerHeight,
-      -1,
-      1
-    );
-
-    monitorScroll.style.setProperty(
-      "--lift",
-      `${monitorPosition * -18}px`
-    );
-
-    monitorScroll.style.setProperty(
-      "--lean",
-      `${monitorPosition * 1.1}deg`
-    );
-
-    const audioPosition = clamp(
-      audioBounds.top / window.innerHeight,
-      -1,
-      1
-    );
-
-    audioPhoto.style.setProperty(
-      "--zoom",
-      String(1.025 + Math.abs(audioPosition) * 0.02)
-    );
-  }
-
-  function scheduleScroll() {
-    if (!scrollFrame) {
-      scrollFrame = requestAnimationFrame(paintScroll);
-    }
-  }
-
-  window.addEventListener("scroll", scheduleScroll, { passive: true });
-  window.addEventListener("resize", scheduleScroll);
-
-  $$('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const target = document.querySelector(link.getAttribute("href"));
-      if (!target) return;
-
-      event.preventDefault();
-
-      target.scrollIntoView({
-        behavior: motion ? "smooth" : "auto",
-        block: "start"
-      });
-    });
-  });
-
-  /*
-   * INCLINAISON SUR ORDINATEUR
-   *
-   * Sur téléphone, le mouvement vient du défilement :
-   * aucun effet ne nécessite de survol.
-   */
+  let enabled = !matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
 
   let tiltFrame = 0;
   let x = 0;
@@ -245,12 +16,135 @@
   let targetX = 0;
   let targetY = 0;
 
+  const visual = $("#visual");
+  const tilt = $("#product-tilt");
+  const curtain = $("#gift-curtain");
+
+  /*
+   * Animation finie, utilisable avec await.
+   * Si la bibliothèque est indisponible, le contenu reste visible.
+   */
+  function run(targets, options) {
+    if (!enabled || !library) return Promise.resolve();
+
+    return new Promise((resolve) => {
+      const instance = library.animate(targets, {
+        ...options,
+
+        onComplete: (self) => {
+          activeAnimations.delete(self);
+          resolve();
+        }
+      });
+
+      activeAnimations.add(instance);
+    });
+  }
+
+  function finish() {
+    [...activeAnimations].forEach((instance) => {
+      instance.complete();
+    });
+  }
+
+  function word(text) {
+    const fragment = document.createDocumentFragment();
+
+    for (const character of text) {
+      const span = document.createElement("span");
+      span.textContent = character;
+      fragment.append(span);
+    }
+
+    $("#big-word").replaceChildren(fragment);
+  }
+
+  function enter() {
+    if (!enabled || !library) return Promise.resolve();
+
+    return Promise.all([
+      run("#big-word span", {
+        translateY: { from: "110%", to: "0%" },
+        rotate: { from: 7, to: 0 },
+        opacity: { from: 0, to: 1 },
+        delay: library.stagger(45),
+        duration: 950,
+        ease: "outExpo"
+      }),
+
+      run(".product-enter", {
+        translateY: { from: 75, to: 0 },
+        rotate: { from: -5, to: 0 },
+        scale: { from: 0.8, to: 1 },
+        opacity: { from: 0, to: 1 },
+        duration: 1150,
+        ease: "outExpo"
+      }),
+
+      run(".tag-inner", {
+        scale: { from: 0.55, to: 1 },
+        opacity: { from: 0, to: 1 },
+        delay: 170,
+        duration: 800,
+        ease: "outBack"
+      }),
+
+      run(".info-in", {
+        translateY: { from: 20, to: 0 },
+        opacity: { from: 0, to: 1 },
+        delay: library.stagger(75, { start: 180 }),
+        duration: 700,
+        ease: "outCubic"
+      })
+    ]);
+  }
+
+  function cover() {
+    curtain.style.transformOrigin = "left";
+
+    return run(curtain, {
+      scaleX: { from: 0, to: 1 },
+      duration: 430,
+      ease: "inOutQuart"
+    });
+  }
+
+  function uncover() {
+    curtain.style.transformOrigin = "right";
+
+    if (!enabled || !library) {
+      curtain.style.transform = "scaleX(0)";
+      return Promise.resolve();
+    }
+
+    return run(curtain, {
+      scaleX: { from: 1, to: 0 },
+      duration: 620,
+      ease: "inOutQuart"
+    });
+  }
+
+  function panel(element) {
+    return run(element, {
+      translateY: { from: 45, to: 0 },
+      opacity: { from: 0, to: 1 },
+      duration: 550,
+      ease: "outExpo"
+    });
+  }
+
+  /*
+   * Inclinaison avec inertie.
+   * La boucle s’arrête dès que le produit rejoint sa position.
+   */
   function paintTilt() {
-    x += (targetX - x) * 0.12;
-    y += (targetY - y) * 0.12;
+    x += (targetX - x) * 0.11;
+    y += (targetY - y) * 0.11;
 
     tilt.style.transform =
-      `perspective(1200px) rotateX(${y}deg) rotateY(${x}deg)`;
+      `perspective(1300px) rotateX(${y}deg) rotateY(${x}deg)`;
+
+    visual.style.setProperty("--word-shift", `${-x * 1.6}px`);
 
     const moving =
       Math.abs(targetX - x) > 0.01 ||
@@ -260,344 +154,107 @@
   }
 
   function requestTilt() {
-    if (!tiltFrame) tiltFrame = requestAnimationFrame(paintTilt);
+    if (!tiltFrame) {
+      tiltFrame = requestAnimationFrame(paintTilt);
+    }
   }
 
   function resetTilt() {
     targetX = 0;
     targetY = 0;
 
-    if (motion && !document.hidden) {
+    if (enabled && !document.hidden) {
       requestTilt();
-    } else {
-      cancelAnimationFrame(tiltFrame);
-      tiltFrame = 0;
-      x = 0;
-      y = 0;
-      tilt.style.transform = "";
+      return;
     }
+
+    cancelAnimationFrame(tiltFrame);
+    tiltFrame = 0;
+    x = 0;
+    y = 0;
+
+    tilt.style.transform = "";
+    visual.style.setProperty("--word-shift", "0px");
   }
 
-  monitorFigure.addEventListener("pointermove", (event) => {
-    if (!motion || !finePointer.matches || dialog.open) return;
+  const finePointer = matchMedia(
+    "(hover: hover) and (pointer: fine)"
+  );
 
-    const bounds = monitorFigure.getBoundingClientRect();
+  visual.addEventListener("pointermove", (event) => {
+    if (!enabled || !finePointer.matches) return;
+    if ($("#showroom").getAttribute("aria-busy") === "true") return;
+    if ($("#wishlist").open) return;
+
+    const bounds = visual.getBoundingClientRect();
 
     targetX =
-      ((event.clientX - bounds.left) / bounds.width - 0.5) * 9;
+      ((event.clientX - bounds.left) / bounds.width - 0.5) * 11;
 
     targetY =
-      (0.5 - (event.clientY - bounds.top) / bounds.height) * 6;
+      (0.5 - (event.clientY - bounds.top) / bounds.height) * 7;
 
     requestTilt();
   });
 
-  monitorFigure.addEventListener("pointerleave", resetTilt);
+  visual.addEventListener("pointerleave", resetTilt);
 
   /*
-   * VIDÉO
-   *
-   * Le fichier n’est chargé que lorsqu’une lecture est demandée.
-   * La vidéo se met en pause hors champ et derrière la liste.
+   * Décor de Noël.
+   * Seulement quelques éléments, pas de grosse simulation.
    */
+  function decorate() {
+    const lights = document.createDocumentFragment();
 
-  video.muted = true;
+    for (let index = 0; index < 15; index++) {
+      const bulb = document.createElement("i");
+      bulb.style.setProperty("--delay", `${index * -0.27}s`);
+      lights.append(bulb);
+    }
 
-  function updateVideoButton() {
-    videoButton.textContent = videoFailed
-      ? "Réessayer"
-      : video.paused
-        ? "Lire la vidéo"
-        : "Mettre en pause";
+    $("#garland").append(lights);
+
+    const flakes = document.createDocumentFragment();
+
+    for (let index = 0; index < 20; index++) {
+      const flake = document.createElement("span");
+      flake.className = "snowflake";
+
+      flake.style.setProperty("--x", `${Math.random() * 100}%`);
+      flake.style.setProperty("--size", `${2 + Math.random() * 3}px`);
+      flake.style.setProperty("--speed", `${8 + Math.random() * 9}s`);
+      flake.style.setProperty("--delay", `${Math.random() * -20}s`);
+      flake.style.setProperty("--sway", `${Math.random() * 90 - 45}px`);
+
+      flakes.append(flake);
+    }
+
+    $("#snow").append(flakes);
   }
 
-  function syncPlayback() {
-    const asleep =
-      document.hidden ||
-      !monitorVisible ||
-      dialog.open;
+  function setMotion(value) {
+    enabled = value;
+    document.body.classList.toggle("motion", enabled);
 
-    document.body.classList.toggle("asleep", asleep);
-
-    const shouldPlay =
-      wantsPlayback &&
-      !asleep &&
-      !videoFailed;
-
-    if (!shouldPlay) {
-      video.pause();
-      return;
-    }
-
-    if (!video.getAttribute("src")) {
-      video.src = video.dataset.src;
-    }
-
-    const request = video.play();
-
-    if (request) {
-      request.catch(() => {
-        updateVideoButton();
-      });
-    }
-  }
-
-  video.addEventListener("loadeddata", () => {
-    screen.classList.add("ready");
-    videoFailed = false;
-    updateVideoButton();
-  });
-
-  video.addEventListener("play", updateVideoButton);
-  video.addEventListener("pause", updateVideoButton);
-
-  video.addEventListener("error", () => {
-    videoFailed = true;
-    screen.classList.remove("ready");
-
-    videoStatus.textContent =
-      "La vidéo est indisponible. Tu peux choisir ton propre fichier.";
-
-    updateVideoButton();
-  });
-
-  videoButton.addEventListener("click", () => {
-    if (videoFailed) {
-      videoFailed = false;
-      wantsPlayback = true;
-      video.load();
-    } else {
-      wantsPlayback = video.paused;
-    }
-
-    syncPlayback();
-  });
-
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver(
-      ([entry]) => {
-        monitorVisible = entry.isIntersecting;
-        syncPlayback();
-      },
-      { threshold: 0.15 }
-    ).observe(monitorFigure);
-  } else {
-    monitorVisible = true;
-  }
-
-  document.addEventListener("visibilitychange", () => {
-    resetTilt();
-    syncPlayback();
-  });
-
-  window.addEventListener("pagehide", () => video.pause());
-  window.addEventListener("pageshow", syncPlayback);
-
-  /*
-   * APERÇU D’UN GAMEPLAY PERSONNEL
-   * Aucun fichier sélectionné n’est envoyé à un serveur.
-   */
-
-  $("#choose-video").addEventListener("click", () => {
-    $("#video-file").click();
-  });
-
-  $("#video-file").addEventListener("change", (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    if (file.type && !file.type.startsWith("video/")) {
-      videoStatus.textContent = "Choisis un fichier vidéo.";
-      event.target.value = "";
-      return;
-    }
-
-    video.pause();
-    screen.classList.remove("ready");
-
-    if (localVideoURL) {
-      URL.revokeObjectURL(localVideoURL);
-    }
-
-    localVideoURL = URL.createObjectURL(file);
-
-    videoFailed = false;
-    wantsPlayback = true;
-    video.src = localVideoURL;
-    video.load();
-
-    videoStatus.textContent =
-      `${file.name} — aperçu local uniquement, non enregistré dans le site.`;
-
-    event.target.value = "";
-    syncPlayback();
-  });
-
-  /*
-   * IMAGES : PAS DE FAUX PRODUIT EN CAS D’ÉCHEC.
-   */
-
-  $$("[data-product-image]").forEach((image) => {
-    const showError = () => {
-      const visual = image.closest("[data-visual]");
-      const fallback = visual?.querySelector(".image-fallback");
-
-      if (fallback) fallback.hidden = false;
-    };
-
-    image.addEventListener("error", showError);
-
-    if (image.complete && image.naturalWidth === 0) {
-      showError();
-    }
-  });
-
-  /*
-   * ACTIVATION / DÉSACTIVATION DES MOUVEMENTS
-   */
-
-  function applyMotion() {
-    document.body.classList.toggle("motion", motion);
-
-    $("#motion-toggle").setAttribute("aria-pressed", String(motion));
-    $("#motion-toggle").setAttribute(
-      "aria-label",
-      motion
-        ? "Désactiver les animations"
-        : "Activer les animations"
-    );
-
-    if (!motion) {
-      [...runningAnimations].forEach((instance) => {
-        instance.complete();
-      });
-
-      runningAnimations.clear();
-      wantsPlayback = false;
-    } else {
-      wantsPlayback = !navigator.connection?.saveData;
-    }
+    if (!enabled) finish();
 
     resetTilt();
-    scheduleScroll();
-    syncPlayback();
   }
 
-  $("#motion-toggle").addEventListener("click", () => {
-    motion = !motion;
-    applyMotion();
-  });
+  decorate();
 
-  reducedMotion.addEventListener("change", (event) => {
-    motion = !event.matches;
-    applyMotion();
-  });
+  window.GiftFX = {
+    get enabled() {
+      return enabled && Boolean(library);
+    },
 
-  /*
-   * LISTE POUR LES PARENTS
-   */
-
-  $$("[data-open-list]").forEach((button) => {
-    button.addEventListener("click", () => {
-      if (dialog.open) return;
-
-      previousOverflow = document.body.style.overflow;
-      dialog.showModal();
-      document.body.style.overflow = "hidden";
-
-      syncPlayback();
-
-      playAnimation(dialog, {
-        translateY: { from: 45, to: 0 },
-        opacity: { from: 0, to: 1 },
-        duration: 500,
-        ease: "outExpo"
-      });
-
-      if (stagger) {
-        playAnimation(".gift-list li", {
-          translateY: { from: 18, to: 0 },
-          opacity: { from: 0, to: 1 },
-          delay: stagger(85, { start: 80 }),
-          duration: 650,
-          ease: "outCubic"
-        });
-      }
-    });
-  });
-
-  dialog.addEventListener("close", () => {
-    document.body.style.overflow = previousOverflow;
-    scheduleScroll();
-    syncPlayback();
-  });
-
-  const listText = [
-    "MA LISTE DE NOËL",
-    "",
-    "01 — UN PC GAMER COMPLET",
-    "La tour, l’écran, le clavier et la souris.",
-    "",
-    "Écran choisi : AOC 27G4XED.",
-    "27 pouces, 180 Hz, Fast IPS, Full HD, 1 ms GtG.",
-    "Budget visé pour l’écran : 99 €, prix à vérifier.",
-    "La tour, le clavier et la souris sont à choisir ensemble.",
-    "https://www.aoc.com/fr/gaming/monitors/27g4xed",
-    "",
-    "02 — DES NOTHING EAR (3)",
-    "Le modèle exact est Ear (3).",
-    "Coloris à choisir ensemble.",
-    "https://fr.nothing.tech/products/ear-3",
-    "",
-    "Ce sont des idées, pas des obligations. Merci !"
-  ].join("\n");
-
-  $("#copy-list").addEventListener("click", async () => {
-    try {
-      if (!navigator.clipboard) {
-        throw new Error("Copie automatique indisponible");
-      }
-
-      await navigator.clipboard.writeText(listText);
-
-      $("#copy-fallback").hidden = true;
-      $("#copy-status").textContent = "Liste copiée. Prête à envoyer.";
-    } catch {
-      const field = $("#copy-fallback");
-
-      field.hidden = false;
-      field.value = listText;
-      field.focus();
-      field.select();
-
-      $("#copy-status").textContent =
-        "Copie automatique indisponible : copie le texte sélectionné.";
-    }
-  });
-
-  if (navigator.share) {
-    $("#share-list").hidden = false;
-
-    $("#share-list").addEventListener("click", async () => {
-      try {
-        await navigator.share({
-          title: "Ma liste de Noël",
-          text: listText
-        });
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          $("#copy-status").textContent =
-            "Le partage n’a pas abouti. Tu peux copier la liste.";
-        }
-      }
-    });
-  }
-
-  /*
-   * DÉMARRAGE
-   */
-
-  applyMotion();
-  intro();
-  scheduleScroll();
+    word,
+    enter,
+    cover,
+    uncover,
+    panel,
+    finish,
+    resetTilt,
+    setMotion
+  };
 })();

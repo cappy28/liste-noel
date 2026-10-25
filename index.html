@@ -2,17 +2,26 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#eeede5">
-  <meta name="description" content="Mes deux idées de cadeaux pour Noël.">
 
-  <title>Sous le sapin — Ma liste de Noël</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#111411">
+  <meta
+    name="description"
+    content="Ma liste de Noël : un PC gamer complet et des Nothing Ear (3)."
+  >
+
+  <title>Ma liste — Noël 2026</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.sanity.io">
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
 
@@ -20,232 +29,427 @@
 
   <script
     defer
-    src="https://cdn.jsdelivr.net/npm/animejs@4.5.0/dist/bundles/anime.umd.min.js"
+    src="https://cdn.jsdelivr.net/npm/animejs/dist/bundles/anime.umd.min.js"
   ></script>
   <script defer src="anime.js"></script>
 </head>
 
 <body>
-  <a class="skip-link" href="#showroom">Aller aux cadeaux</a>
+  <a class="skip-link" href="#setup">Aller à ma liste</a>
+
+  <div class="reading-progress" aria-hidden="true">
+    <span id="reading-progress"></span>
+  </div>
 
   <header class="header">
-    <a class="brand" href="./index.html" aria-label="Sous le sapin, accueil">
-      SOUS<br>LE SAPIN<span aria-hidden="true">✳</span>
+    <a class="brand" href="#setup" aria-label="Ma liste de Noël, accueil">
+      <span class="brand-symbol" aria-hidden="true">✳</span>
+      <span>MA LISTE<span class="brand-year">NOËL 2026</span></span>
     </a>
 
-    <p class="header-note">MA LISTE DE NOËL.<br>EN UN PEU MOINS CLASSIQUE.</p>
-
-    <div class="header-actions">
-      <button id="motion-toggle" class="quiet-button" type="button">
-        Animations : oui
-      </button>
-
-      <button id="open-list" class="black-button" type="button">
-        Toute la liste <span aria-hidden="true">↗</span>
-      </button>
-    </div>
+    <button
+      class="motion-button"
+      id="motion-toggle"
+      type="button"
+      aria-pressed="true"
+      aria-label="Désactiver les animations"
+    >
+      <span class="motion-light" aria-hidden="true"></span>
+      Animations
+    </button>
   </header>
 
   <main>
-    <h1 class="sr-only">Mes idées de cadeaux de Noël</h1>
+    <!-- CHAPITRE 01 : LE SETUP -->
 
-    <section
-      id="showroom"
-      class="showroom"
-      aria-labelledby="product-title"
-    >
-      <div class="scene-top">
-        <span id="scene-label">01 / LE SETUP</span>
-        <span class="pointer-hint">BOUGE LA SOURIS. LE PRODUIT SUIT.</span>
-      </div>
+    <section class="setup chapter" id="setup" aria-labelledby="main-title">
+      <div class="container">
+        <div class="chapter-heading" data-reveal>
+          <span>01 / POUR JOUER</span>
+          <span>MA LISTE DE NOËL</span>
+        </div>
 
-      <div class="big-word" id="big-word" aria-hidden="true">
-        <span>P</span><span>L</span><span>A</span><span>Y</span><span>.</span>
-      </div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow" data-intro>LE PC GAMER COMPLET</p>
 
-      <div class="star" aria-hidden="true">✳</div>
+            <h1 id="main-title">
+              <span class="line-mask">
+                <span data-heading>Le prochain</span>
+              </span>
+              <span class="line-mask">
+                <span class="accent" data-heading>niveau.</span>
+              </span>
+            </h1>
 
-      <!--
-        Chaque animation a son propre conteneur :
-        entrée, inclinaison et flottement ne se perturbent pas.
-      -->
-      <div class="product-anchor">
-        <div class="product-enter">
-          <div class="product-tilt" id="product-tilt">
-            <div class="product-float">
+            <p class="hero-description" data-intro>
+              La tour, l’écran, le clavier et la souris.
+              Pour l’écran, j’ai déjà une idée précise.
+            </p>
 
-              <div id="gaming-product" class="product">
-                <div class="monitor">
-                  <img
-                    class="product-photo"
-                    src="https://cdn.sanity.io/images/hf5b3axp/production/9fde48a49713104537d8161bafae51a679a656bd-2011x2000.png?auto=format&fit=max&w=1600"
-                    alt="Photo officielle de l’écran AOC 24G4XE."
-                    width="2011"
-                    height="2000"
-                    fetchpriority="high"
-                    draggable="false"
-                  >
+            <a class="inline-link" href="#configuration" data-intro>
+              Voir le reste du setup <span aria-hidden="true">↓</span>
+            </a>
+          </div>
 
-                  <div class="screen" id="screen" aria-hidden="true">
-                    <video
-                      id="screen-video"
-                      src="https://media.w3.org/2010/05/sintel/trailer.mp4"
-                      muted
-                      loop
-                      playsinline
-                      preload="metadata"
-                      tabindex="-1"
-                    ></video>
+          <figure class="monitor-figure" id="monitor-figure">
+            <div class="monitor-stage" data-visual>
+              <span class="visual-watermark" aria-hidden="true">180</span>
 
-                    <div class="video-progress">
-                      <span id="video-progress"></span>
+              <div class="monitor-enter" data-reveal>
+                <div class="monitor-scroll" id="monitor-scroll">
+                  <div class="monitor-tilt" id="monitor-tilt">
+                    <div class="monitor-float">
+                      <div class="monitor">
+                        <!--
+                          Photo officielle du 27G4XED.
+                          Les marges transparentes sont recadrées en CSS.
+                        -->
+                        <img
+                          class="monitor-shell"
+                          data-product-image
+                          src="https://cdn.sanity.io/images/hf5b3axp/production/2eac8eec71d30a26de396fe84d29f2ad31080120-2011x2000.png?auto=format&w=1280"
+                          srcset="
+                            https://cdn.sanity.io/images/hf5b3axp/production/2eac8eec71d30a26de396fe84d29f2ad31080120-2011x2000.png?auto=format&w=640 640w,
+                            https://cdn.sanity.io/images/hf5b3axp/production/2eac8eec71d30a26de396fe84d29f2ad31080120-2011x2000.png?auto=format&w=1280 1280w
+                          "
+                          sizes="(max-width: 800px) 94vw, 55vw"
+                          width="2011"
+                          height="2000"
+                          alt="L’écran AOC Gaming 27G4XED noir, vu de face avec son pied."
+                          fetchpriority="high"
+                          decoding="async"
+                          draggable="false"
+                        >
+
+                        <div class="monitor-screen" id="monitor-screen">
+                          <video
+                            id="screen-video"
+                            data-src="https://media.w3.org/2010/05/sintel/trailer.mp4"
+                            muted
+                            loop
+                            playsinline
+                            preload="none"
+                            aria-hidden="true"
+                            tabindex="-1"
+                          ></video>
+
+                          <div class="screen-reflection" aria-hidden="true"></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div id="audio-product" class="product ear-product" hidden>
-                <img
-                  class="product-photo"
-                  src="https://cdn.shopify.com/s/files/1/0585/5258/2321/files/Ear3-white_9c7c5465-3f29-4bb9-a438-7883444a6bad.png?v=1758101979&width=1400"
-                  alt="Photo officielle des Nothing Ear (3) blancs avec leur boîtier."
-                  width="1000"
-                  height="1000"
-                  draggable="false"
-                >
+              <p class="image-fallback" hidden>
+                Le visuel ne s’affiche pas.
+                Le lien officiel reste disponible ci-dessous.
+              </p>
+            </div>
+
+            <figcaption class="monitor-caption">
+              <div>
+                <span class="micro muted">LE MODÈLE CHOISI</span>
+                <strong>AOC 27G4XED</strong>
               </div>
 
+              <div class="price">
+                <span class="micro muted">BUDGET ÉCRAN</span>
+                <strong>99<span> €</span></strong>
+                <small>Objectif · prix à vérifier</small>
+              </div>
+            </figcaption>
+
+            <div class="video-controls">
+              <button class="small-button" id="video-toggle" type="button">
+                Lire la vidéo
+              </button>
+
+              <button class="small-button" id="choose-video" type="button">
+                Mettre mon gameplay ↗
+              </button>
+
+              <input
+                id="video-file"
+                type="file"
+                accept="video/*"
+                hidden
+              >
             </div>
+
+            <p class="media-note" id="video-status" role="status">
+              Aperçu : Sintel, © Blender Foundation.
+              Vidéo de démonstration, sans son.
+            </p>
+          </figure>
+        </div>
+
+        <dl class="spec-strip" data-reveal>
+          <div>
+            <dt>LA TAILLE</dt>
+            <dd>
+              <strong aria-label="27 pouces">
+                <span data-count="27" aria-hidden="true">27</span>
+                <small aria-hidden="true">″</small>
+              </strong>
+              <span>Pour voir plus grand.</span>
+            </dd>
           </div>
+
+          <div>
+            <dt>LA FLUIDITÉ</dt>
+            <dd>
+              <strong aria-label="180 hertz">
+                <span data-count="180" aria-hidden="true">180</span>
+                <small aria-hidden="true">Hz</small>
+              </strong>
+              <span>Fréquence maximale.</span>
+            </dd>
+          </div>
+
+          <div>
+            <dt>LA DALLE</dt>
+            <dd>
+              <strong class="spec-text">Fast IPS</strong>
+              <span>Temps de réponse : 1 ms GtG.</span>
+            </dd>
+          </div>
+
+          <div>
+            <dt>LA DÉFINITION</dt>
+            <dd>
+              <strong class="spec-text">Full HD</strong>
+              <span>1920 × 1080 pixels.</span>
+            </dd>
+          </div>
+        </dl>
+
+        <div class="monitor-information" data-reveal>
+          <a
+            class="inline-link"
+            href="https://www.aoc.com/fr/gaming/monitors/27g4xed"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Voir ce modèle chez AOC
+            <span aria-hidden="true">↗</span>
+          </a>
+
+          <details class="technical-details">
+            <summary>
+              Les autres caractéristiques
+              <span class="details-plus" aria-hidden="true">+</span>
+            </summary>
+
+            <dl>
+              <div><dt>HDR</dt><dd>HDR10</dd></div>
+              <div><dt>Synchronisation</dt><dd>G-SYNC Compatible</dd></div>
+              <div><dt>HDMI</dt><dd>2 × HDMI 2.0</dd></div>
+              <div><dt>DisplayPort</dt><dd>1 × DisplayPort 1.4</dd></div>
+              <div><dt>Haut-parleurs</dt><dd>2 × 2 W</dd></div>
+              <div><dt>Couleur</dt><dd>Noir</dd></div>
+            </dl>
+          </details>
+        </div>
+
+        <div class="configuration" id="configuration">
+          <div data-reveal>
+            <p class="eyebrow">ET AUTOUR DE L’ÉCRAN ?</p>
+            <h2>Tout ce qu’il<br>faut pour jouer.</h2>
+            <p class="section-description">
+              Le reste se choisit ensemble,
+              selon le budget et les jeux.
+            </p>
+          </div>
+
+          <ol class="equipment-list">
+            <li data-reveal>
+              <span class="equipment-number">01</span>
+              <strong>La tour gamer</strong>
+              <span class="equipment-status">À choisir</span>
+            </li>
+            <li data-reveal>
+              <span class="equipment-number">02</span>
+              <strong>L’écran</strong>
+              <span class="equipment-status selected">AOC 27G4XED</span>
+            </li>
+            <li data-reveal>
+              <span class="equipment-number">03</span>
+              <strong>Le clavier</strong>
+              <span class="equipment-status">À choisir</span>
+            </li>
+            <li data-reveal>
+              <span class="equipment-number">04</span>
+              <strong>La souris</strong>
+              <span class="equipment-status">À choisir</span>
+            </li>
+          </ol>
         </div>
       </div>
-
-      <aside class="ticket">
-        <div class="ticket-enter">
-          <span id="ticket-label">BUDGET ÉCRAN</span>
-          <strong id="ticket-value">99 €</strong>
-          <small id="ticket-note">Objectif, pas prix confirmé.</small>
-        </div>
-      </aside>
-
-      <div class="scene-copy">
-        <h2 id="product-title">Le setup complet.</h2>
-        <p id="product-description">
-          La tour, l’écran, le clavier et la souris.
-          Les modèles se choisissent ensemble.
-        </p>
-      </div>
-
-      <div class="scene-actions">
-        <a
-          id="product-link"
-          class="product-link"
-          href="https://www.aoc.com/fr/gaming/monitors/24g4xe"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span id="product-link-label">Voir l’écran de référence</span>
-          <span aria-hidden="true">↗</span>
-        </a>
-
-        <div class="video-tools" id="video-tools">
-          <button id="video-toggle" type="button">Lire la vidéo</button>
-          <button id="choose-video" type="button">Mon gameplay ↗</button>
-          <input id="video-file" type="file" accept="video/*" hidden>
-        </div>
-      </div>
-
-      <div class="scene-bottom">
-        <p id="scene-note">
-          Photo : AOC 24G4XE. Modèle provisoire, prix à confirmer.
-        </p>
-        <span id="scene-counter">01 — 02</span>
-      </div>
-
-      <div class="wipe" id="wipe" aria-hidden="true"></div>
     </section>
 
-    <div class="switchboard">
-      <div class="product-switch" role="group" aria-label="Choisir un cadeau">
-        <span class="switch-indicator" id="switch-indicator" aria-hidden="true"></span>
+    <!-- CHAPITRE 02 : LES ÉCOUTEURS -->
 
-        <button
-          class="scene-choice"
-          data-scene="0"
-          type="button"
-          aria-pressed="true"
-        >
-          <span>01</span> LE SETUP
-        </button>
+    <section class="audio chapter" id="audio" aria-labelledby="audio-title">
+      <div class="container">
+        <div class="chapter-heading" data-reveal>
+          <span>02 / POUR ÉCOUTER</span>
+          <span>NOTHING</span>
+        </div>
 
-        <button
-          class="scene-choice"
-          data-scene="1"
-          type="button"
-          aria-pressed="false"
-        >
-          <span>02</span> LES ÉCOUTEURS
-        </button>
+        <div class="audio-heading">
+          <div data-reveal>
+            <p class="eyebrow">L’AUTRE ENVIE.</p>
+            <h2 id="audio-title">Nothing<br>Ear <span class="red">(3).</span></h2>
+          </div>
+
+          <p class="audio-intro" data-reveal>
+            Et pour ma musique au quotidien,
+            les écouteurs que j’aimerais.
+          </p>
+        </div>
+
+        <figure class="audio-figure" data-reveal>
+          <div class="audio-photo" id="audio-photo" data-visual>
+            <img
+              data-product-image
+              src="https://cdn.sanity.io/images/gtd4w1cq/production/93af6a6f88ce484e7947262a8904b378739de91a-4096x2305.jpg?auto=format&w=1400"
+              srcset="
+                https://cdn.sanity.io/images/gtd4w1cq/production/93af6a6f88ce484e7947262a8904b378739de91a-4096x2305.jpg?auto=format&w=700 700w,
+                https://cdn.sanity.io/images/gtd4w1cq/production/93af6a6f88ce484e7947262a8904b378739de91a-4096x2305.jpg?auto=format&w=1400 1400w
+              "
+              sizes="(max-width: 800px) 94vw, 90vw"
+              width="4096"
+              height="2305"
+              alt="Photo officielle des Nothing Ear (3), avec les coloris noir et blanc."
+              loading="lazy"
+              decoding="async"
+            >
+
+            <p class="image-fallback" hidden>
+              Le visuel ne s’affiche pas.
+              Le lien officiel reste disponible ci-dessous.
+            </p>
+          </div>
+
+          <figcaption>
+            Visuel officiel Nothing. Les deux coloris sont présentés.
+          </figcaption>
+        </figure>
+
+        <div class="audio-bottom" data-reveal>
+          <p>
+            <strong>Le modèle exact : Nothing Ear (3).</strong>
+            <span>Pour la couleur, on peut choisir ensemble.</span>
+          </p>
+
+          <a
+            class="inline-link"
+            href="https://fr.nothing.tech/products/ear-3"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Voir les écouteurs
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <div class="closing" data-reveal>
+          <p class="eyebrow">ET SURTOUT…</p>
+          <h2>Merci.</h2>
+          <p>
+            Ce sont des idées, pas des obligations.<br>
+            Si vous avez des questions, demandez-moi.
+          </p>
+
+          <button class="dark-button" type="button" data-open-list>
+            Voir la liste simple <span aria-hidden="true">↗</span>
+          </button>
+        </div>
       </div>
-
-      <p id="video-status" class="media-note" role="status">
-        Vidéo de démonstration : Sintel — © Blender Foundation.
-      </p>
-    </div>
-
-    <p class="sr-only" id="scene-announcement" role="status"></p>
+    </section>
   </main>
 
   <footer>
-    <span>Deux envies. Aucune obligation.</span>
-    <span>Et surtout : merci.</span>
+    <span>Ma liste de Noël · 2026</span>
+    <span>Deux idées qui me feraient plaisir.</span>
   </footer>
 
+  <!-- Navigation accessible au pouce sur téléphone. -->
+  <nav class="dock" aria-label="Navigation de la liste">
+    <span class="dock-marker" id="dock-marker" aria-hidden="true"></span>
+
+    <a class="dock-link is-active" href="#setup" aria-current="location">
+      <span>01</span> Le setup
+    </a>
+
+    <a class="dock-link" href="#audio">
+      <span>02</span> Les Ear (3)
+    </a>
+
+    <button type="button" data-open-list>
+      Ma liste <span aria-hidden="true">↗</span>
+    </button>
+  </nav>
+
+  <!-- Liste courte destinée aux parents. -->
   <dialog id="wishlist" aria-labelledby="wishlist-title">
+    <div class="sheet-handle" aria-hidden="true"></div>
+
     <div class="dialog-top">
-      <span class="micro">VERSION POUR LES PARENTS</span>
+      <span class="micro">LA VERSION SIMPLE</span>
 
       <form method="dialog">
-        <button class="close-button" type="submit" aria-label="Fermer" autofocus>
+        <button class="close-button" type="submit" autofocus aria-label="Fermer">
           ✕
         </button>
       </form>
     </div>
 
-    <h2 id="wishlist-title">Sous<br>le sapin.</h2>
+    <h2 id="wishlist-title">Ma liste<br>de Noël.</h2>
 
     <ol class="gift-list">
-      <li class="gift-row">
-        <span class="gift-number">01</span>
+      <li>
+        <span class="gift-index">01</span>
         <div>
           <h3>Un PC gamer complet</h3>
+          <p>La tour, l’écran, le clavier et la souris.</p>
           <p>
-            La tour, un écran AOC, un clavier et une souris.
-            Budget visé pour l’écran : 99 €.
-            Modèles et configuration à choisir ensemble.
+            Écran choisi : <strong>AOC 27G4XED</strong>,
+            27 pouces, 180 Hz, Fast IPS, Full HD.
+          </p>
+          <p>
+            Budget visé pour l’écran : <strong>99 €</strong>,
+            prix à vérifier. Le reste est à choisir ensemble.
           </p>
         </div>
       </li>
 
-      <li class="gift-row">
-        <span class="gift-number">02</span>
+      <li>
+        <span class="gift-index">02</span>
         <div>
           <h3>Des Nothing Ear (3)</h3>
-          <p>Le modèle exact est Ear (3). Le coloris reste à choisir.</p>
+          <p>Le modèle exact est Ear (3). Coloris à choisir ensemble.</p>
         </div>
       </li>
     </ol>
 
     <p class="dialog-note">
-      Ce sont des idées, pas des obligations.
-      Si vous avez des questions, demandez-moi.
+      Ce sont des idées, pas des obligations. Merci !
     </p>
 
-    <button id="copy-list" class="black-button" type="button">
-      Copier la liste ↗
-    </button>
+    <div class="dialog-actions">
+      <button class="dark-button" id="share-list" type="button" hidden>
+        Partager ↗
+      </button>
 
-    <p id="copy-status" class="copy-status" role="status"></p>
+      <button class="outline-button" id="copy-list" type="button">
+        Copier la liste
+      </button>
+    </div>
+
+    <p class="copy-status" id="copy-status" role="status"></p>
 
     <textarea
       id="copy-fallback"

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="fr" data-scene="setup">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ma liste de Noël 🎄</title>
+<meta name="description" content="Un PC gamer et des Nothing Ear (3). Ce sont des idées, pas des obligations.">
+<meta name="theme-color" content="#b7cef1">
+<script>
+(function(h){var s,q=location.search,hr=new Date().getHours();h.className+=" js";try{s=localStorage.getItem("motion")}catch(e){}
+if(s==="off"||(!s&&matchMedia("(prefers-reduced-motion: reduce)").matches))h.className+=" no-motion";
+if(/nuit/.test(q)||(!/jour/.test(q)&&(hr>=20||hr<6)))h.className+=" night";
+h.setAttribute("data-scene",location.hash==="#ear"?"ear":"setup");
+document.addEventListener("error",function(e){var i=e.target;if(!i||i.tagName!=="IMG")return;
+if(i.dataset.fallback&&!i.dataset.tried){i.dataset.tried="1";i.src=i.dataset.fallback;return}
+var b=i.closest("[data-slot]");if(b)b.classList.add("is-missing")},true)})(document.documentElement);
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Caveat:wght@500;700&family=Space+Grotesk:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="curtain curtain--intro is-closed" aria-hidden="true">
+  <div class="curtain__half curtain__half--l"></div>
+  <div class="curtain__half curtain__half--r"></div>
+  <div class="curtain__deco"><span class="bow bow--big"></span><p class="curtain__tag"><span>Pour vous.</span><strong>Ma liste de Noël</strong></p><p class="curtain__hint">Touchez pour ouvrir</p></div>
+</div>
+
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<header class="top">
+  <a class="brand" href="#setup" data-go="setup"><span class="brand__dot" aria-hidden="true"></span>Noël 2026</a>
+  <div class="top__actions">
+    <button class="chip" type="button" data-motion aria-pressed="true"><span class="chip__switch" aria-hidden="true"></span><span class="chip__label">Animations</span></button>
+    <button class="chip" type="button" data-music aria-pressed="false" aria-label="Musique de Noël">♪<span class="chip__label">Musique</span></button>
+    <button class="chip chip--solid" type="button" data-open-list aria-haspopup="dialog">🎁 Ma liste</button>
+  </div>
+</header>
+
+<div class="garland" aria-hidden="true">
+  <svg viewBox="0 0 1000 40" preserveAspectRatio="none"><path d="M0 4Q50 34 100 4T200 4T300 4T400 4T500 4T600 4T700 4T800 4T900 4T1000 4"/></svg>
+  <i style="--k:0"></i><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i><i style="--k:4"></i><i style="--k:5"></i><i style="--k:6"></i><i style="--k:7"></i><i style="--k:8"></i><i style="--k:9"></i>
+</div>
+<canvas class="snow" aria-hidden="true"></canvas>
+<canvas class="fx" aria-hidden="true"></canvas>
+
+<div class="toast" role="status" hidden>
+  <span class="toast__icon" aria-hidden="true">🏆</span>
+  <p><small>Succès débloqué</small><strong>Lutin secret</strong><span>Tu as trouvé le code caché. Joyeux Noël !</span></p>
+</div>
+
+<main id="contenu">
+<h1 class="sr-only">Ma liste de Noël</h1>
+
+<!-- ========== 01 · SETUP ========== -->
+<article class="scene scene--setup" id="setup" aria-labelledby="setup-title">
+  <section class="hero">
+    <button class="bauble" type="button" aria-label="Faire sonner la boule de Noël"><span class="bauble__string"></span><span class="bauble__cap"></span><span class="bauble__ball"></span></button>
+    <p class="hero__kicker"><b>01</b> / 02 · Le setup</p>
+    <p class="word" aria-hidden="true"><span style="--i:0">P</span><span style="--i:1">L</span><span style="--i:2">A</span><span style="--i:3">Y</span><span style="--i:4">.</span></p>
+    <div class="hero__stage">
+      <div class="hero__float">
+        <figure class="hero__tilt photo" data-slot="assets/setup-complet.jpg">
+          <img src="assets/setup-complet.jpg" alt="Le setup PC gamer complet que j'aimerais" fetchpriority="high" decoding="async">
+          <figcaption><span>le setup rêvé</span><span>n° 01</span></figcaption>
+        </figure>
+      </div>
+      <div class="tag"><div class="tag__card">
+        <p class="tag__top">Pour Noël</p><p class="tag__main">PC gamer</p>
+        <p class="tag__sub">tour : <span data-eur="tour">850 €</span> de budget</p><p class="tag__date"><span data-countdown></span>25.12</p>
+      </div></div>
+    </div>
+    <div class="hero__intro">
+      <h2 id="setup-title" tabindex="-1">Un PC gamer complet.</h2>
+      <p>J'en paie <strong data-eur="part">600 €</strong> avec mon argent de poche. La tour, on la choisit ensemble.</p>
+      <a class="link-arrow" href="#boitier">Voir le détail ↓</a>
+    </div>
+  </section>
+
+  <section class="section" id="boitier" aria-labelledby="case-title">
+    <header class="section__head reveal">
+      <p class="eyebrow">La tour</p>
+      <h2 id="case-title">be quiet!<br>Pure Base 501 Airflow</h2>
+      <p class="lead">Boîtier ATX sobre, panneau latéral <strong>plein</strong>, sans vitre. Retire le panneau pour voir l'intérieur.</p>
+    </header>
+    <div class="grid2">
+      <figure class="case reveal" data-case>
+        <div class="case__stage" data-slot="assets/boitier-ouvert.png">
+          <img class="case__inside" src="assets/boitier-ouvert.png" alt="Intérieur d'une tour PC ouverte avec ses composants" width="600" height="644" loading="lazy" decoding="async">
+          <div class="case__panel" aria-hidden="true"><i></i><i></i><i></i><i></i><span>Panneau plein · sans vitre</span></div>
+        </div>
+        <figcaption>Exemple d'intérieur : les composants, on les choisit ensemble (neufs et d'occasion).</figcaption>
+        <button class="btn" type="button" data-case-toggle aria-pressed="false">Retirer le panneau</button>
+      </figure>
+      <div class="panel reveal" style="--d:1">
+        <figure class="shot" data-slot="assets/pure-base-501-airflow-black.png">
+          <img src="assets/pure-base-501-airflow-black.png" alt="Boîtier be quiet! Pure Base 501 Airflow noir" loading="lazy" decoding="async">
+        </figure>
+        <ul class="specs">
+          <li><span>Format</span>ATX</li>
+          <li><span>Panneau latéral</span>Plein, sans vitre</li>
+          <li><span>Façade</span>Airflow</li>
+          <li><span>Couleur</span>Noir</li>
+        </ul>
+        <p class="price"><span data-eur="tour">850 €</span> <small>budget de la tour, pièces neuves et d'occasion</small></p>
+        <a class="link-out" href="https://www.bequiet.com/fr/case/5322" target="_blank" rel="noopener">Voir chez be quiet! ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="parts-title">
+    <header class="section__head reveal"><p class="eyebrow">Autour de la tour</p><h2 id="parts-title">Les pièces.</h2></header>
+    <div class="grid2">
+      <article class="card reveal" aria-labelledby="aoc-title">
+        <div class="card__visual card__visual--screen">
+          <div class="screen" data-slot="assets/aoc-27g4xed.png">
+            <img class="screen__photo" src="https://cdn.sanity.io/images/hf5b3axp/production/2eac8eec71d30a26de396fe84d29f2ad31080120-2011x2000.png?auto=format&amp;w=1400" data-fallback="assets/aoc-27g4xed.png" alt="Écran AOC Gaming 27G4XED" loading="lazy" decoding="async">
+            <video class="screen__video" muted loop playsinline disablepictureinpicture preload="none" aria-label="Vidéo de démonstration dans l'écran" data-sources="assets/video-ecran.mp4 https://media.w3.org/2010/05/sintel/trailer.mp4"></video>
+            <span class="screen__glare" aria-hidden="true"></span>
+            <span class="screen__on" aria-hidden="true"></span>
+            <span class="screen__ui" aria-hidden="true"><span class="cursor"><svg viewBox="0 0 20 24"><path d="M2 2l15 9.5-6.5 1.6L7.5 21z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg></span></span>
+          </div>
+          <button class="play" type="button" data-video-toggle aria-label="Lire la vidéo">Lire</button>
+        </div>
+        <div class="card__body">
+          <p class="eyebrow">Écran</p>
+          <h3 id="aoc-title">AOC Gaming 27G4XED</h3>
+          <ul class="chips"><li>27"</li><li>180 Hz</li><li>Fast IPS</li><li>1 ms GtG</li><li>Full HD</li><li>HDR10</li><li>G-Sync Compatible</li></ul>
+          <p class="small">2 × HDMI 2.0, 1 × DisplayPort 1.4, haut-parleurs.</p>
+          <p class="price" data-eur="aoc">99,99 €</p>
+          <a class="link-out" href="https://www.aoc.com/fr/gaming/monitors/27g4xed" target="_blank" rel="noopener">Voir chez AOC ↗</a>
+          <p class="credit" data-video-credit hidden>Vidéo de démo : Sintel, © Blender Foundation.</p>
+        </div>
+      </article>
+
+      <article class="card reveal" style="--d:1" aria-labelledby="logi-title">
+        <div class="card__visual logi" data-logi>
+          <div class="logi__kb" data-slot="assets/logitech-clavier.png"><img src="assets/logitech-clavier.png" alt="Clavier Logitech Signature Slim" loading="lazy" decoding="async"></div>
+          <div class="logi__mouse" data-slot="assets/logitech-souris.png"><img src="assets/logitech-souris.png" alt="Souris Logitech du pack MK950" loading="lazy" decoding="async"></div>
+        </div>
+        <div class="card__body">
+          <p class="eyebrow">Clavier + souris</p>
+          <h3 id="logi-title">Logitech Signature Slim Combo MK950</h3>
+          <p>Coloris : <strong>le moins cher</strong> (blanc ou graphite, peu importe).</p>
+          <p class="price"><span data-eur="logi">70,50 €</span> <small>avec coupons, sur Amazon</small></p>
+          <a class="link-out" href="https://www.amazon.fr/dp/B0CTQN69N1" target="_blank" rel="noopener">Voir sur Amazon ↗</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pot-title">
+    <div class="pot reveal">
+      <span class="bow" aria-hidden="true"></span>
+      <p class="eyebrow">Le budget</p>
+      <h2 id="pot-title">Je mets <span data-eur="part">600 €</span> de ma poche dans le PC.</h2>
+      <dl class="sum">
+        <div><dt>Budget de la tour<small>pièces neuves et d'occasion</small></dt><dd data-eur="tour">850 €</dd></div>
+        <div class="sum__me"><dt>Ma participation<small>argent de poche</small></dt><dd>− <span data-eur="part">600 €</span></dd></div>
+        <div class="sum__sub"><dt>Reste pour la tour</dt><dd data-eur="reste">250 €</dd></div>
+        <div><dt>Écran AOC</dt><dd data-eur="aoc">99,99 €</dd></div>
+        <div><dt>Clavier + souris Logitech</dt><dd data-eur="logi">70,50 €</dd></div>
+        <div class="sum__total"><dt>Je vous demande pour le setup</dt><dd data-eur="setup">420,49 €</dd></div>
+      </dl>
+      <p class="note">Hors livraison. Prix repérés, à vérifier.</p>
+      <button class="btn btn--light" type="button" data-open-list>Voir toute ma liste</button>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="mot-title">
+    <header class="section__head reveal"><p class="eyebrow">Pour finir</p><h2 id="mot-title">Mon petit mot.</h2></header>
+    <div class="letter reveal">
+      <p style="--l:0">Papa, Maman,</p>
+      <p style="--l:1">Merci d'avoir regardé ma liste jusqu'ici. Pour le PC, je mets <span data-eur="part">600 €</span> de mon argent de poche : il reste <span data-eur="reste">250 €</span> pour compléter la tour.</p>
+      <p style="--l:2">En échange, je promets de ne plus avoir aucun avertissement et de remplir avec le plus grand sérieux le tableau qui va être mis en place.</p>
+      <p class="letter__sign" style="--l:3">— <span data-sign>Moi</span> ♥</p>
+    </div>
+  </section>
+
+  <a class="next" href="#ear" data-go="ear"><b>02</b><span>Page suivante<strong>Nothing Ear (3)</strong></span><i aria-hidden="true">→</i></a>
+</article>
+
+<!-- ========== 02 · EAR (3) ========== -->
+<article class="scene scene--ear" id="ear" aria-labelledby="ear-title">
+  <section class="hero">
+    <button class="bauble bauble--green" type="button" aria-label="Faire sonner la boule de Noël"><span class="bauble__string"></span><span class="bauble__cap"></span><span class="bauble__ball"></span></button>
+    <p class="hero__kicker"><b>02</b> / 02 · Le son</p>
+    <p class="word" aria-hidden="true"><span style="--i:0">S</span><span style="--i:1">O</span><span style="--i:2">U</span><span style="--i:3">N</span><span style="--i:4">D</span><span style="--i:5">.</span></p>
+    <div class="hero__stage">
+      <span class="waves" aria-hidden="true"><i style="--k:0"></i><i style="--k:1"></i><i style="--k:2"></i></span>
+      <div class="hero__float">
+        <figure class="hero__tilt product" data-slot="assets/nothing-ear-3.png">
+          <img src="assets/nothing-ear-3.png" data-fallback="https://cdn.shopify.com/s/files/1/0585/5258/2321/files/Ear3-white_9c7c5465-3f29-4bb9-a438-7883444a6bad.png?v=1758101979&amp;width=1200" alt="Écouteurs Nothing Ear (3) blancs" decoding="async">
+        </figure>
+      </div>
+      <span class="hero__shadow" aria-hidden="true"></span>
+      <div class="tag"><div class="tag__card">
+        <p class="tag__top">Pour Noël</p><p class="tag__main" data-eur="ear">119 €</p>
+        <p class="tag__sub">Nothing Ear (3) · blanc</p><p class="tag__date"><span data-countdown></span>25.12</p>
+      </div></div>
+    </div>
+    <div class="hero__intro">
+      <h2 id="ear-title" tabindex="-1">Nothing Ear (3).</h2>
+      <p>Des écouteurs sans fil, en blanc.</p>
+      <a class="link-out" href="https://fr.nothing.tech/products/ear-3" target="_blank" rel="noopener">Voir chez Nothing ↗</a>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Détails des Nothing Ear (3)">
+    <div class="grid2 grid2--ear">
+      <figure class="banner reveal" data-slot="visuel Nothing">
+        <img src="https://cdn.sanity.io/images/gtd4w1cq/production/93af6a6f88ce484e7947262a8904b378739de91a-4096x2305.jpg?w=1200&amp;auto=format" alt="Visuel officiel des Nothing Ear (3)" width="1200" height="675" loading="lazy" decoding="async">
+      </figure>
+      <div class="panel reveal" style="--d:1">
+        <p class="eyebrow">Écouteurs</p>
+        <h3>Nothing Ear (3)</h3>
+        <ul class="specs">
+          <li><span>Prix repéré</span><b data-eur="ear">119 €</b></li>
+          <li><span>Coloris</span>Blanc</li>
+        </ul>
+        <a class="link-out" href="https://fr.nothing.tech/products/ear-3" target="_blank" rel="noopener">Voir la fiche officielle ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <a class="next" href="#setup" data-go="setup"><i aria-hidden="true">←</i><span>Revenir à<strong>Le setup</strong></span><b>01</b></a>
+</article>
+</main>
+
+<footer class="end">
+  <section class="advent" aria-labelledby="advent-title">
+    <p class="eyebrow">En attendant le 25</p>
+    <h2 id="advent-title">Calendrier de l'Avent</h2>
+    <div class="advent__grid"></div>
+    <p class="advent__msg" role="status"></p>
+  </section>
+  <p class="end__big">Ce sont des idées,<br>pas des obligations.</p>
+  <button class="thanks" type="button" data-thanks>Merci ! ♥</button>
+  <p class="small">Prix repérés en ligne, à vérifier.</p>
+</footer>
+
+<nav class="switch" aria-label="Pages">
+  <span class="switch__pill" aria-hidden="true"></span>
+  <a href="#setup" data-go="setup" aria-current="page"><b>01</b> Setup</a>
+  <a href="#ear" data-go="ear"><b>02</b> Ear (3)</a>
+</nav>
+
+<div class="curtain curtain--page" hidden aria-hidden="true">
+  <div class="curtain__half curtain__half--l"></div>
+  <div class="curtain__half curtain__half--r"></div>
+  <div class="curtain__deco"><span class="bow bow--big"></span><p class="curtain__tag"><span>Pour toi.</span><strong>Joyeux Noël</strong></p></div>
+</div>
+
+<dialog class="sheet" id="liste" aria-labelledby="liste-title">
+  <form class="sheet__inner" method="dialog">
+    <header class="sheet__head">
+      <div><p class="eyebrow">Pour vous</p><h2 id="liste-title">Ma liste de Noël</h2></div>
+      <button class="icon-btn" value="close" aria-label="Fermer">×</button>
+    </header>
+    <h3>PC gamer</h3>
+    <ul class="lines">
+      <li><a href="https://www.bequiet.com/fr/case/5322" target="_blank" rel="noopener">Tour PC<small>be quiet! Pure Base 501 Airflow + pièces neuves et d'occasion</small></a><b data-eur="tour">850 €</b></li>
+      <li><span>Ma participation<small>argent de poche</small></span><b>− <span data-eur="part">600 €</span></b></li>
+      <li><a href="https://www.aoc.com/fr/gaming/monitors/27g4xed" target="_blank" rel="noopener">Écran AOC 27G4XED</a><b data-eur="aoc">99,99 €</b></li>
+      <li><a href="https://www.amazon.fr/dp/B0CTQN69N1" target="_blank" rel="noopener">Logitech MK950<small>coloris le moins cher · coupons Amazon</small></a><b data-eur="logi">70,50 €</b></li>
+    </ul>
+    <p class="subtotal"><span>Pour le setup</span><b data-eur="setup">420,49 €</b></p>
+    <h3>Écouteurs</h3>
+    <ul class="lines">
+      <li><a href="https://fr.nothing.tech/products/ear-3" target="_blank" rel="noopener">Nothing Ear (3)<small>coloris blanc</small></a><b data-eur="ear">119 €</b></li>
+    </ul>
+    <div class="sheet__total"><span>Ce que je vous demande<small>hors livraison · prix à vérifier</small></span><b data-eur="all">539,49 €</b></div>
+    <p class="note">Ma promesse : plus aucun avertissement, et le tableau rempli avec le plus grand sérieux.</p>
+    <div class="sheet__actions">
+      <button class="btn" type="button" data-copy>Copier</button>
+      <button class="btn btn--dark" type="button" data-share>Partager</button>
+    </div>
+    <p class="sheet__status" role="status"></p>
+    <p class="sheet__end">Ce sont des idées, pas des obligations. Merci !</p>
+  </form>
+</dialog>
+</body>
+</html>

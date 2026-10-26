@@ -233,3 +233,24 @@ button:active,a:active{scale:.94}
 
 /* Déballage automatique : moins de scroll */
 .ch{height:150svh}
+
+/* 1. Faux boîtier des Ear retiré */
+.etui{display:none}
+
+/* 2. Produits visibles le soir */
+.night .scene::before{content:"";position:absolute;inset:-18%;z-index:-1;border-radius:50%;pointer-events:none;opacity:var(--o);background:radial-gradient(closest-side,rgba(239,232,216,.3),rgba(239,232,216,.08) 60%,transparent)}
+.night .produit{filter:drop-shadow(0 0 1px rgba(255,255,255,.4)) drop-shadow(0 24px 28px rgba(0,0,0,.55))}
+
+/* 5. Points au lieu de ✓ */
+.montage li::before{content:"• "}
+
+/* 7. Un cadeau = un écran */
+.ch{height:100svh}
+
+/* 8. Texte plus gros */
+html{font-size:18px}
+.detail{font-size:17px}
+.etiquette>span,.recap small,.note,.montage li,.imprimer{font-size:14px}
+.case,.credit{font-size:12px}
+@media (orientation:landscape) and (max-height:560px){.detail{font-size:15
+  px}}

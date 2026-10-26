@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Perdu sous le sapin</title>
+<meta name="theme-color" content="#254b38">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Space+Grotesk:wght@400;700&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;display:grid;place-items:center;padding:24px;font:400 1rem/1.5 "Space Grotesk",system-ui,sans-serif;color:#15171c;
+background:linear-gradient(90deg,transparent calc(50% - 20px),#b63830 calc(50% - 20px) calc(50% + 20px),transparent 0),
+linear-gradient(transparent calc(50% - 20px),#b63830 calc(50% - 20px) calc(50% + 20px),transparent 0),
+repeating-linear-gradient(45deg,#254b38 0 22px,#2b5541 22px 44px)}
+.card{position:relative;max-width:380px;padding:28px 28px 26px 48px;background:#f3efe5;text-align:left;rotate:-3deg;
+clip-path:polygon(22px 0,100% 0,100% 100%,22px 100%,0 50%);box-shadow:0 20px 40px rgba(0,0,0,.35);animation:in .8s cubic-bezier(.2,.9,.2,1) both}
+.card::before{content:"";position:absolute;left:18px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:#254b38}
+@keyframes in{from{opacity:0;transform:translateY(30px) rotate(6deg)}}
+h1{margin:0;font:800 6rem/.85 "Barlow Condensed",sans-serif;color:#b63830}
+p{margin:10px 0 20px}
+a{display:inline-flex;align-items:center;min-height:46px;padding:0 20px;border-radius:99px;background:#15171c;color:#f3efe5;font-weight:700;text-decoration:none}
+a:focus-visible{outline:3px solid #b63830;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.card{animation:none}}
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>404</h1>
+  <p><strong>Ce cadeau n'est pas sous le sapin.</strong><br>Cette page n'existe pas.</p>
+  <a id="home" href="/">← Retour à ma liste</a>
+</main>
+<script>
+// Site GitHub de type pseudo.github.io/nom-du-depot/ : on revient à la racine du dépôt.
+var p = location.pathname.split("/").filter(Boolean);
+if (/\.github\.io$/.test(location.hostname) && p.length) document.getElementById("home").href = "/" + p[0] + "/";
+</script>
+</body>
+</html>

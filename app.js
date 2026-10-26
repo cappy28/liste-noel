@@ -712,3 +712,86 @@ if (motion) snow.start();
   })(t0);
 })();
                                                                                
+/* ===== BOOST ===== */
+(() => {
+  const calme = () => matchMedia('(prefers-reduced-motion: reduce)').matches || localStorage.getItem('motion') === 'off';
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const mk = (t, cl) => { const e = document.createElement(t); e.className = cl; document.body.append(e); return e; };
+  const COUL = ['#e7b84a', '#ffe9a8', '#b63830', '#ff6b5a', '#3fa66b', '#ffffff', '#9fd0ff'];
+  const OR = ['#e7b84a', '#ffe9a8', '#ffffff'];
+  const pick = a => a[Math.random() * a.length | 0];
+
+  /* Aurore boréale */
+  const au = mk('div', 'aurore'); au.innerHTML = '<i></i><i></i><i></i>';
+
+  /* Canvas magique */
+  const cv = mk('canvas', 'magie'), c = cv.getContext('2d');
+  let W, H, dpr, P = [], F = [], vide = false;
+  const taille = () => { dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; };
+  taille(); addEventListener('resize', taille);
+
+  function paillette(x, y, n = 2, f = 1) {
+    if (calme()) return;
+    for (let i = 0; i < n; i++) P.push({ x, y, vx: rnd(-1, 1) * f, vy: rnd(-1.5, .5) * f, g: .04, drag: .97, v: 1, d: rnd(.018, .03), r: rnd(1.5, 3.2), col: pick(OR), s: 1 });
+  }
+  function boum(x, y) {
+    const a = pick(COUL), b = pick(COUL), n = W < 600 ? 55 : 80, sp = Math.min(1.3, H / 700);
+    P.push({ x, y, vx: 0, vy: 0, g: 0, drag: 1, v: .35, d: .04, r: rnd(30, 45), col: a });
+    for (let i = 0; i < n; i++) {
+      const an = i / n * 6.283 + rnd(-.1, .1), v = rnd(1.5, 5.5) * sp;
+      P.push({ x, y, vx: Math.cos(an) * v, vy: Math.sin(an) * v, g: .05, drag: .975, v: 1, d: rnd(.008, .015), r: rnd(1.4, 2.4), col: i % 2 ? a : b, s: Math.random() < .3 });
+    }
+  }
+  function feu(n = 5) {
+    if (calme() || document.hidden) return;
+    for (let i = 0; i < n; i++) setTimeout(() => F.push({ x: rnd(.15, .85) * W, y: H, vx: rnd(-.6, .6), vy: -rnd(8, 11), h: rnd(.12, .4) * H }), i * rnd(250, 450));
+  }
+
+  let t0 = performance.now();
+  (function loop(now) {
+    const k = Math.min(3, (now - t0) / 16.7); t0 = now;
+    if (!P.length && !F.length) { if (!vide) { c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, cv.width, cv.height); vide = true; } return requestAnimationFrame(loop); }
+    vide = false; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.globalCompositeOperation = 'destination-out'; c.globalAlpha = 1; c.fillStyle = 'rgba(0,0,0,.3)'; c.fillRect(0, 0, W, H);
+    c.globalCompositeOperation = 'lighter';
+    F = F.filter(f => {
+      f.x += f.vx * k; f.y += f.vy * k;
+      P.push({ x: f.x, y: f.y, vx: rnd(-.3, .3), vy: rnd(0, 1), g: 0, drag: 1, v: .8, d: .05, r: 1.3, col: '#ffe9a8' });
+      if (f.y > f.h) return true; boum(f.x, f.y); return false;
+    });
+    P = P.filter(p => {
+      const dr = p.drag ** k; p.vx *= dr; p.vy = p.vy * dr + p.g * k; p.x += p.vx * k; p.y += p.vy * k; p.v -= p.d * k;
+      if (p.v <= 0) return false;
+      c.globalAlpha = p.v; c.fillStyle = p.col; c.beginPath(); c.arc(p.x, p.y, p.r, 0, 7); c.fill();
+      if (p.s) { const l = p.r * 2.6; c.fillRect(p.x - l, p.y - .5, l * 2, 1); c.fillRect(p.x - .5, p.y - l, 1, l * 2); }
+      return true;
+    });
+    requestAnimationFrame(loop);
+  })(t0);
+
+  /* Déclencheurs */
+  let lx = 0, ly = 0;
+  const bouge = (x, y) => { if (Math.hypot(x - lx, y - ly) > 8) { lx = x; ly = y; paillette(x, y); } };
+  addEventListener('pointermove', e => bouge(e.clientX, e.clientY), { passive: true });
+  addEventListener('touchmove', e => bouge(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  addEventListener('pointerdown', e => { if (!e.target.closest('a,button,input,label,dialog,summary,[role=button],.traineau,.bonhomme')) paillette(e.clientX, e.clientY, 16, 2.5); });
+  setTimeout(() => feu(6), 7500);
+  addEventListener('hashchange', () => setTimeout(() => feu(3), 900));
+  [...document.querySelectorAll('button')].find(b => /merci/i.test(b.textContent))?.addEventListener('click', () => feu(5));
+
+  /* Petits plus */
+  const tag = (t, attr) => document.head.querySelector(`${t}[${attr}]`) || document.head.appendChild(document.createElement(t));
+  const ico = tag('link', 'rel~=icon'); ico.rel = 'icon';
+  ico.href = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🎄</text></svg>');
+  const titre = document.title;
+  document.addEventListener('visibilitychange', () => document.title = document.hidden ? '🎁 Reviens… les cadeaux t’attendent !' : titre);
+  const meta = tag('meta', 'name=theme-color'); meta.name = 'theme-color';
+  const barre = mk('div', 'progres');
+  addEventListener('scroll', () => { const m = document.documentElement.scrollHeight - innerHeight; barre.style.transform = `scaleX(${m > 0 ? scrollY / m : 0})`; }, { passive: true });
+  document.addEventListener('click', e => { if (e.target.closest('button,a')) navigator.vibrate?.(12); });
+  setInterval(() => {
+    const n = [document.documentElement, document.body].some(e => e.classList.contains('night'));
+    meta.content = n ? '#0e1a2b' : document.documentElement.dataset.scene === 'ear' ? '#ed8269' : '#b7cef1';
+    au.classList.toggle('stop', calme());
+  }, 1000);
+})();

@@ -230,3 +230,6 @@ button:active,a:active{scale:.94}
 .emballage .pg,.emballage .pd{opacity:calc(1 - var(--o))}
 .produit{opacity:clamp(0,calc((var(--o) - .15) * 3),1)}
 .ouvert{opacity:var(--b)}
+
+/* Déballage automatique : moins de scroll */
+.ch{height:150svh}

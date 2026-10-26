@@ -392,3 +392,16 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 @media (max-width:600px){.bonhomme{width:52px}.traineau{width:120px}.cheminee{width:76px;height:70
   px}}
+
+/* ===== BOOST ===== */
+.aurore{position:fixed;left:0;right:0;top:0;height:55vh;pointer-events:none;z-index:calc(var(--sol-z) - 2);mix-blend-mode:screen;opacity:.45;filter:blur(30px);overflow:hidden;-webkit-mask:linear-gradient(#000,transparent);mask:linear-gradient(#000,transparent);transition:opacity 1s}
+.night .aurore{opacity:.9}
+.aurore i{position:absolute;left:-20%;width:140%;height:40%;border-radius:50%;animation:aur 14s ease-in-out infinite alternate}
+.aurore i:nth-child(1){top:5%;background:linear-gradient(90deg,transparent,#3fffb0 30%,#2bd4ff 60%,transparent)}
+.aurore i:nth-child(2){top:20%;background:linear-gradient(90deg,transparent,#a66bff 25%,#3fffb0 55%,transparent);animation-duration:19s;animation-delay:-6s}
+.aurore i:nth-child(3){top:0;opacity:.6;background:linear-gradient(90deg,transparent 10%,#ff6bd5,#2bd4ff 70%,transparent);animation-duration:23s;animation-delay:-11s}
+.aurore.stop i{animation-play-state:paused}
+@keyframes aur{0%{transform:translateX(-12%) skewY(-4deg) scaleY(.6)}50%{transform:translateX(5%) skewY(3deg) scaleY(1.2)}100%{transform:translateX(12%) skewY(-2deg) scaleY(.8)}}
+.magie{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:calc(var(--sol-z) + 5)}
+.progres{position:fixed;left:0;top:0;width:100%;height:3px;transform-origin:0 50%;transform:scaleX(0);pointer-events:none;z-index:calc(var(--sol-z) + 6);background:repeating-linear-gradient(90deg,#b63830 0 14px,#e7b84a 14px 28px,#254b38 28px 42px);box-shadow:0 0 8px rgba(231,184,74,.7)}
+::selection{background:#e7b84a;color:#254b38}

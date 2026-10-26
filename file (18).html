@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr" class="bloque">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ma liste de Noël 🎁</title>
+<meta name="theme-color" content="#10201a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+<canvas id="neige" aria-hidden="true"></canvas>
+
+<div id="intro">
+  <button class="boite" id="boite" aria-label="Ouvrir le cadeau">
+    <span class="couvercle"></span><span class="corps"></span><span class="rv"></span><span class="noeud"></span>
+  </button>
+  <p class="tire">Tire sur le ruban</p>
+</div>
+
+<header class="tete">
+  <button class="boule" id="boule" aria-label="Boule de Noël"></button>
+  <p class="sur">Liste de Noël · <span id="annee"></span></p>
+  <h1>Quatre cadeaux<br>à déballer.</h1>
+  <div class="horloge" id="horloge"></div>
+  <nav class="sommaire">
+    <a href="#setup"><b>01</b>La tour</a>
+    <a href="#ecran"><b>02</b>L'écran</a>
+    <a href="#clavier"><b>03</b>Clavier + souris</a>
+    <a href="#ear"><b>04</b>Les écouteurs</a>
+  </nav>
+</header>
+
+<main>
+<section class="ch" id="setup" style="--c:#b3262e;--w:min(56vw,300px);--h:min(54svh,440px)">
+  <div class="emb"><span class="g"></span><span class="d"></span><span class="rv"></span><span class="noeud"></span><em>Touche le cadeau 🎁</em></div>
+  <div class="contenu">
+    <p class="num">01 / 04</p>
+    <h2>La tour</h2>
+    <figure class="duo"><img class="ferme" data-img="setup" alt="be quiet! Pure Base 501 Airflow Black"><img class="ferme" data-img="setupOuvert" alt="Boîtier ouvert"></figure>
+    <p class="prix"><span class="compte" data-k="setup"></span></p>
+    <p class="desc" id="infoTour"></p>
+    <a class="lien aim" data-lien="setup" target="_blank" rel="noopener">Voir le boîtier ↗</a>
+  </div>
+</section>
+
+<section class="ch" id="ecran" style="--c:#1f6b4a;--w:min(86vw,520px);--h:min(36svh,300px)">
+  <div class="emb"><span class="g"></span><span class="d"></span><span class="rv"></span><span class="noeud"></span><em>Touche le cadeau 🎁</em></div>
+  <div class="contenu">
+    <p class="num">02 / 04</p>
+    <h2>L'écran</h2>
+    <figure class="moniteur"><img class="ferme" data-img="ecran" alt="AOC 27G4XED"><video id="video" muted playsinline loop preload="none"></video></figure>
+    <p class="prix"><span class="compte" data-k="ecran"></span></p>
+    <p class="desc">AOC 27G4XED · 27 pouces · 180 Hz</p>
+    <a class="lien aim" data-lien="ecran" target="_blank" rel="noopener">Voir l'écran ↗</a>
+  </div>
+</section>
+
+<section class="ch" id="clavier" style="--c:#23356b;--w:min(90vw,560px);--h:min(20svh,150px)">
+  <div class="emb"><span class="g"></span><span class="d"></span><span class="rv"></span><span class="noeud"></span><em>Touche le cadeau 🎁</em></div>
+  <div class="contenu">
+    <p class="num">03 / 04</p>
+    <h2>Clavier + souris</h2>
+    <figure class="duo"><img class="ferme" data-img="clavier" alt="Clavier Logitech"><img class="ferme petit" data-img="souris" alt="Souris Logitech"></figure>
+    <p class="prix"><span class="compte" data-k="clavier"></span></p>
+    <p class="desc">Logitech MK950 · sans fil</p>
+    <a class="lien aim" data-lien="clavier" target="_blank" rel="noopener">Voir le pack ↗</a>
+  </div>
+</section>
+
+<section class="ch" id="ear" style="--c:#c08a2b;--r:#f4efe6;--w:min(44vw,220px);--h:min(28svh,220px)">
+  <div class="emb"><span class="g"></span><span class="d"></span><span class="rv"></span><span class="noeud"></span><em>Touche le cadeau 🎁</em></div>
+  <div class="contenu">
+    <p class="num">04 / 04</p>
+    <h2>Les écouteurs</h2>
+    <figure><img class="ferme" data-img="ear" alt="Nothing Ear (3) blancs"></figure>
+    <p class="prix"><span class="compte" data-k="ear"></span></p>
+    <p class="desc">Nothing Ear (3) · blancs</p>
+    <a class="lien aim" data-lien="ear" target="_blank" rel="noopener">Voir les écouteurs ↗</a>
+  </div>
+</section>
+
+<section class="fin" id="liste">
+  <h2 data-vu>Joyeux<br>Noël</h2>
+  <p id="mot" data-vu></p>
+  <svg class="signature" data-vu viewBox="0 0 400 100"><text id="sig" x="200" y="72" text-anchor="middle"></text></svg>
+  <figure class="polaroid" data-vu><img data-img="photo" alt="Mon futur setup"><figcaption id="legende"></figcaption></figure>
+  <div class="caisse" data-vu>
+    <div class="imprimante"><i></i></div>
+    <div id="ticket"></div>
+  </div>
+  <div class="actions" id="actions">
+    <button class="aim" id="copier">Copier</button>
+    <button class="aim" id="partager">Partager</button>
+    <a class="aim" id="wa" target="_blank" rel="noopener">WhatsApp</a>
+    <a class="aim" id="sms">SMS</a>
+    <button class="aim" id="imprimer">Imprimer</button>
+  </div>
+  <button class="remonter aim" id="remonter">↑ Remonter</button>
+</section>
+</main>
+
+<nav class="pilule">
+  <button id="platine" class="aim" aria-label="Musique"><span class="vinyle"></span></button>
+  <span class="compteur"><span class="guirlande" id="guirlande"><i></i><i></i><i></i><i></i></span><b id="nb">0/4</b></span>
+  <button id="anim" class="aim" aria-label="Animations">✦</button>
+  <button id="menuBtn" class="aim" aria-label="Menu">☰</button>
+</nav>
+<div class="menu" id="menu">
+  <a href="#setup">01 La tour</a><a href="#ecran">02 L'écran</a><a href="#clavier">03 Clavier + souris</a><a href="#ear">04 Les écouteurs</a><a href="#liste">✦ Ma liste</a>
+</div>
+
+<dialog id="zoom"><img id="zoomImg" alt=""></dialog>
+<div id="toast"></div>
+</body>
+</html>

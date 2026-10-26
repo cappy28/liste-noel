@@ -498,3 +498,217 @@ if (intro && motion) {
   replayWords();
 }
 if (motion) snow.start();
+
+/* ===== HIVER : neige au sol, givre, bonhomme, traîneau, cheminée ===== */
+(() => {
+  const R = {
+    solMax: innerWidth < 600 ? 22 : 32, // hauteur max de la neige (px)
+    remplissage: 45,                     // secondes pour couvrir le sol
+    bonhommeA: 0.6,                      // le bonhomme apparaît à 60 % de neige
+    traineau: [25, 50],                  // secondes entre 2 passages
+    givre: innerWidth < 600 ? 60 : 100   // épaisseur du givre (px)
+  };
+  const calme = () => matchMedia('(prefers-reduced-motion: reduce)').matches || localStorage.getItem('motion') === 'off';
+  const nuit = () => [document.documentElement, document.body].some(e => e.classList.contains('night'));
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const add = (tag, cls, html = '') => { const e = document.createElement(tag); e.className = cls; e.innerHTML = html; document.body.append(e); return e; };
+  const etoile = (x, y, cls = '') => { const e = add('i', 'etoile ' + cls); e.style.left = x + 'px'; e.style.top = y + 'px'; setTimeout(() => e.remove(), 1500); return e; };
+  let W = innerWidth, H = innerHeight;
+
+  /* --- Neige au sol --- */
+  const sol = add('canvas', 'sol'), sx = sol.getContext('2d'), PAS = 4, SH = 70;
+  let hs = [], relief = [], dpr = 1;
+  function tailleSol() {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    sol.width = W * dpr; sol.height = SH * dpr;
+    const n = Math.ceil(W / PAS) + 2, old = hs, ph = rnd(0, 9);
+    hs = Array.from({ length: n }, (_, i) => old.length ? old[Math.floor(i * old.length / n)] : 0);
+    relief = hs.map((_, i) => .72 + .18 * Math.sin(i * .045 + ph) + .1 * Math.sin(i * .13 + ph * 2));
+  }
+  const hA = x => hs[Math.max(0, Math.min(hs.length - 1, Math.round(x / PAS)))] || 0;
+  function bosse(x, v) {
+    const c = Math.round(x / PAS);
+    for (let d = -6; d <= 6; d++) if (hs[c + d] != null) hs[c + d] = Math.min(R.solMax * 1.5, hs[c + d] + v * (1 - Math.abs(d) / 7));
+  }
+  function majSol(dt) {
+    const v = R.solMax / R.remplissage;
+    for (let i = 0; i < hs.length; i++) { const cap = R.solMax * relief[i]; if (hs[i] < cap) hs[i] = Math.min(cap, hs[i] + dt * v * rnd(0, 2)); }
+    if (zoneFeu) for (let x = zoneFeu[0]; x < zoneFeu[1]; x += PAS) { const i = Math.round(x / PAS); if (hs[i] > 1.5) hs[i] -= dt * 12; }
+    for (let i = 1; i < hs.length - 1; i++) hs[i] = (hs[i - 1] + hs[i] * 6 + hs[i + 1]) / 8;
+  }
+  function dessineSol(t) {
+    sx.setTransform(dpr, 0, 0, dpr, 0, 0); sx.clearRect(0, 0, W, SH);
+    sx.beginPath(); sx.moveTo(0, SH);
+    for (let i = 0; i < hs.length; i++) sx.lineTo(i * PAS, SH - hs[i]);
+    sx.lineTo(W, SH); sx.closePath();
+    const g = sx.createLinearGradient(0, SH - R.solMax, 0, SH);
+    g.addColorStop(0, '#fff'); g.addColorStop(1, '#d6e4f6');
+    sx.fillStyle = g; sx.shadowColor = 'rgba(30,60,110,.3)'; sx.shadowBlur = 8; sx.fill(); sx.shadowBlur = 0;
+    sx.fillStyle = '#e7b84a';
+    for (let i = 3; i < hs.length; i += 11) if (Math.sin(t * 2.3 + i * 1.7) > .85 && hs[i] > 4) sx.fillRect(i * PAS, SH - hs[i] + 3, 1.6, 1.6);
+  }
+
+  /* --- Vitre givrée --- */
+  const gv = add('canvas', 'givre'), gx = gv.getContext('2d');
+  const modele = document.createElement('canvas'), mx = modele.getContext('2d');
+  const masque = document.createElement('canvas'), kx = masque.getContext('2d');
+  let sale = true, repousse = 999, dernier = null;
+  function branche(x, y, a, l, n) {
+    const x2 = x + Math.cos(a) * l, y2 = y + Math.sin(a) * l;
+    mx.moveTo(x, y); mx.lineTo(x2, y2);
+    if (n > 0) { branche(x2, y2, a + rnd(.4, .8), l * .55, n - 1); branche(x2, y2, a - rnd(.4, .8), l * .55, n - 1); branche(x2, y2, a + rnd(-.2, .2), l * .7, n - 1); }
+  }
+  function tailleGivre() {
+    for (const c of [gv, modele, masque]) { c.width = W; c.height = H; }
+    const e = R.givre, b = 'rgba(236,244,255,';
+    [[0, 0, 0, e], [0, H, 0, H - e], [0, 0, e, 0], [W, 0, W - e, 0]].forEach(([a, c, d, f]) => {
+      const g = mx.createLinearGradient(a, c, d, f); g.addColorStop(0, b + '.75)'); g.addColorStop(1, b + '0)');
+      mx.fillStyle = g; mx.fillRect(0, 0, W, H);
+    });
+    const n = Math.round((W + H) / 9);
+    mx.strokeStyle = 'rgba(255,255,255,.6)'; mx.lineWidth = .8; mx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const p = Math.random(), [x, y, a] = [[p * W, 0, Math.PI / 2], [p * W, H, -Math.PI / 2], [0, p * H, 0], [W, p * H, Math.PI]][i % 4];
+      branche(x, y, a + rnd(-.7, .7), rnd(.25, .6) * e, 2);
+    }
+    mx.stroke(); mx.fillStyle = 'rgba(255,255,255,.7)';
+    for (let i = 0; i < n * 5; i++) { const d = Math.random() ** 2 * e, p = Math.random(); const [x, y] = [[p * W, d], [p * W, H - d], [d, p * H], [W - d, p * H]][i % 4]; mx.fillRect(x, y, 1.2, 1.2); }
+    sale = true;
+  }
+  function dessineGivre() {
+    gx.globalCompositeOperation = 'source-over'; gx.clearRect(0, 0, W, H); gx.drawImage(modele, 0, 0);
+    gx.globalCompositeOperation = 'destination-out'; gx.drawImage(masque, 0, 0);
+    gx.globalCompositeOperation = 'source-over'; sale = false;
+  }
+  function essuie(x, y) {
+    const e = R.givre * 1.6, r = W < 600 ? 34 : 46;
+    if (x > e && x < W - e && y > e && y < H - e) return void (dernier = null);
+    const p = dernier || { x, y }, d = Math.hypot(x - p.x, y - p.y);
+    for (let s = 0; s <= d; s += r / 3) {
+      const k = d ? s / d : 0, cx = p.x + (x - p.x) * k, cy = p.y + (y - p.y) * k;
+      const g = kx.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      kx.fillStyle = g; kx.beginPath(); kx.arc(cx, cy, r, 0, 7); kx.fill();
+    }
+    dernier = { x, y }; sale = true; repousse = 0;
+  }
+  addEventListener('pointermove', e => { if (e.pointerType === 'mouse') essuie(e.clientX, e.clientY); }, { passive: true });
+  addEventListener('touchmove', e => essuie(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  addEventListener('touchend', () => dernier = null, { passive: true });
+
+  /* --- Bonhomme de neige --- */
+  const bh = add('div', 'bonhomme', `<span class="bulle"></span><svg viewBox="0 0 60 100" aria-hidden="true">
+<g class="p" style="--d:0s"><circle cx="30" cy="78" r="20" fill="#fff" stroke="#c9d8ee" stroke-width="2"/></g>
+<g class="p" style="--d:.5s"><circle cx="30" cy="48" r="14" fill="#fff" stroke="#c9d8ee" stroke-width="2"/><circle cx="30" cy="44" r="1.8" fill="#254b38"/><circle cx="30" cy="51" r="1.8" fill="#254b38"/></g>
+<g class="p" style="--d:1s"><circle cx="30" cy="25" r="10" fill="#fff" stroke="#c9d8ee" stroke-width="2"/><circle cx="26.5" cy="23" r="1.4" fill="#222"/><circle cx="33.5" cy="23" r="1.4" fill="#222"/><path d="M30 26l9 2-9 1.6z" fill="#e8833a"/></g>
+<g class="p" style="--d:1.4s"><path d="M17 37q13 6 26 0l1 4q-14 6-28 0z" fill="#b63830"/><path d="M38 39l3 12h-5z" fill="#b63830"/></g>
+<g class="p" style="--d:1.7s"><rect x="21" y="4" width="18" height="12" rx="2" fill="#254b38"/><rect x="16" y="14" width="28" height="3.5" rx="1.7" fill="#254b38"/><rect x="21" y="11" width="18" height="2.5" fill="#b63830"/></g>
+<g class="p" style="--d:2s"><path d="M17 48L3 39M10 43.5l-4-7M44 48l13-11" stroke="#6b4423" stroke-width="2.2" stroke-linecap="round" fill="none"/></g></svg>`);
+  bh.hidden = true; let bhX = 0;
+  const phrases = ['Joyeux Noël !', 'Brr… il caille ici', 'Belle liste, hein ?', 'J’ai rien vu, promis', 'Vivement le 25 !'];
+  bh.addEventListener('click', () => {
+    bh.querySelector('.bulle').textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    bh.classList.remove('coucou'); void bh.offsetWidth; bh.classList.add('coucou');
+    clearTimeout(bh.t); bh.t = setTimeout(() => bh.classList.remove('coucou'), 2200);
+  });
+
+  /* --- Traîneau --- */
+  const tr = add('div', 'traineau', `<svg viewBox="0 0 170 60" aria-hidden="true"><defs>
+<g id="renne" stroke="#6b4423" stroke-linecap="round" fill="#7a4a26"><ellipse rx="12" ry="5.5" stroke="none"/><path d="M8-3L15-12" stroke-width="4"/><ellipse cx="17" cy="-14" rx="5" ry="3.2" stroke="none"/>
+<path d="M-8 4l-4 9M-4 5l1 9M6 4l-2 9M9 3l5 8M15-17l-2-6m1 3l-4-1M18-16l2-6m-1 3l3-2M-12-1l-4-3" fill="none" stroke-width="1.6"/></g></defs>
+<path d="M36 20Q75 30 113 27M36 20Q95 34 151 23" stroke="#e7b84a" stroke-width="1" fill="none"/>
+<use href="#renne" x="104" y="34"/><use href="#renne" x="142" y="30"/><circle cx="164" cy="16" r="2.4" fill="#ff3b30"/>
+<circle cx="16" cy="18" r="8" fill="#8a6a3a"/><circle cx="32" cy="17" r="8" fill="#c8312a"/><circle cx="35" cy="7" r="4.5" fill="#f2c4a0"/><path d="M31 8q4 8 8 0z" fill="#fff"/><path d="M30.5 5q4-9 9-1z" fill="#c8312a"/><circle cx="30" cy="4" r="1.6" fill="#fff"/>
+<path d="M6 24h40q8 0 10-12h6q-2 24-20 24H12q-6 0-6-6z" fill="#b63830"/><path d="M2 46h48q10 0 13-9M16 36v10M44 36v10" stroke="#e7b84a" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`);
+  tr.hidden = true; let vol = null, colis = [];
+  const planifie = () => setTimeout(part, rnd(...R.traineau) * 1000);
+  function part() {
+    if (calme() || document.hidden || vol) return planifie();
+    vol = { t: 0, dur: rnd(8, 11), s: Math.random() < .5 ? 1 : -1, y: rnd(.05, .2) * H, et: 0, lache: 0 };
+    tr.classList.toggle('g', vol.s < 0); tr.hidden = false;
+  }
+  setTimeout(part, 10000);
+  tr.addEventListener('pointerdown', () => {
+    if (!vol || vol.lache >= 3) return; vol.lache++;
+    const r = tr.getBoundingClientRect();
+    colis.push({ el: add('div', 'colis'), x: r.left + r.width * (vol.s > 0 ? .25 : .75) - 11, y: r.top + r.height * .6, vx: vol.s * rnd(40, 90), vy: -120, a: 0, va: rnd(-200, 200) });
+  });
+  function eclat(x, y) {
+    for (let i = 0; i < 10; i++) {
+      const e = etoile(x, y, 'b'), a = rnd(Math.PI, Math.PI * 2), d = rnd(20, 50);
+      e.style.setProperty('--dx', Math.cos(a) * d + 'px'); e.style.setProperty('--dy', Math.sin(a) * d + 'px');
+    }
+  }
+  function majTraineau(dt) {
+    if (vol) {
+      vol.t += dt; const p = vol.t / vol.dur, w = tr.offsetWidth;
+      const x = vol.s > 0 ? -w + p * (W + w) : W - p * (W + w), y = vol.y + Math.sin(p * 9) * 12;
+      tr.style.transform = `translate(${x}px,${y}px) rotate(${Math.cos(p * 9) * 4 * vol.s}deg)`;
+      if ((vol.et += dt) > .04) { vol.et = 0; etoile(x + w * (vol.s > 0 ? .1 : .9), y + w * .3 + rnd(-4, 4)); }
+      if (p >= 1) { vol = null; tr.hidden = true; planifie(); }
+    }
+    colis = colis.filter(c => {
+      c.vy += 700 * dt; c.x += c.vx * dt; c.y += c.vy * dt; c.a += c.va * dt;
+      const fond = H - hA(c.x + 11) - 17;
+      if (c.y >= fond) {
+        c.y = fond; c.pose = true; c.a = 0; bosse(c.x + 11, 6); eclat(c.x + 11, fond);
+        setTimeout(() => { c.el.style.opacity = 0; setTimeout(() => c.el.remove(), 700); }, 6000);
+      }
+      c.el.style.transform = `translate(${c.x}px,${c.y}px) rotate(${c.a}deg)`;
+      return !c.pose;
+    });
+  }
+
+  /* --- Cheminée (mode nuit) --- */
+  const ch = add('div', 'cheminee', '<div class="foyer"></div><canvas width="100" height="160"></canvas>');
+  const lu = add('div', 'lueur'), fx = ch.querySelector('canvas').getContext('2d');
+  let feu = false, zoneFeu = null, fl = [], lum = 0, cible = .6, tl = 0;
+  function majFeu(dt) {
+    const k = dt * 60;
+    fx.clearRect(0, 0, 100, 160); fx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 3; i++) fl.push({ x: 50 + rnd(-15, 15), y: 152, vx: rnd(-.3, .3), vy: rnd(-1.4, -.7), v: 1, r: rnd(6, 10) });
+    if (Math.random() < .04) { cible = 1; for (let i = 0; i < 4; i++) fl.push({ x: 50 + rnd(-8, 8), y: 140, vx: rnd(-.8, .8), vy: rnd(-3.5, -2), v: 1, r: 1.3, et: 1 }); }
+    fl = fl.filter(p => {
+      p.x += p.vx * k; p.y += p.vy * k; p.v -= (p.et ? .012 : .03) * k; if (!p.et) p.r *= 1 - .015 * k;
+      if (p.v <= 0) return false;
+      fx.fillStyle = p.et ? `hsla(45,100%,70%,${p.v})` : `hsla(${15 + 35 * p.v},100%,${50 + 15 * p.v}%,${p.v * .5})`;
+      fx.beginPath(); fx.arc(p.x, p.y, p.r, 0, 7); fx.fill(); return true;
+    });
+    fx.globalCompositeOperation = 'source-over';
+    if ((tl += dt) > .09) { tl = 0; cible = rnd(.55, .9); }
+    lum += (cible - lum) * .25; lu.style.opacity = lum;
+  }
+
+  /* --- Vérifs chaque seconde + redimension --- */
+  setInterval(() => {
+    feu = nuit(); ch.classList.toggle('on', feu); lu.classList.toggle('on', feu);
+    const r = ch.getBoundingClientRect(); zoneFeu = feu ? [r.left - 16, r.right + 16] : null;
+    if (bh.hidden) { let s = 0; hs.forEach((h, i) => s += Math.min(1, h / (R.solMax * relief[i]))); if (s / hs.length >= R.bonhommeA) bh.hidden = false; }
+    const b = bh.getBoundingClientRect(); bhX = b.left + b.width / 2;
+  }, 1000);
+  let rt;
+  addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { const lw = W, lh = H; W = innerWidth; H = innerHeight; tailleSol(); if (W !== lw || Math.abs(H - lh) > 150) tailleGivre(); }, 200);
+  });
+
+  /* --- Boucle --- */
+  tailleSol(); tailleGivre();
+  let t0 = performance.now(), T = 0, tg = 0;
+  (function boucle(now) {
+    const dt = Math.min(.05, (now - t0) / 1000); t0 = now; T += dt;
+    majSol(dt); dessineSol(T);
+    if ((tg += dt) > .12) {
+      tg = 0;
+      if (repousse < 160) {
+        kx.globalCompositeOperation = 'destination-out'; kx.fillStyle = 'rgba(0,0,0,.04)'; kx.fillRect(0, 0, W, H);
+        kx.globalCompositeOperation = 'source-over'; if (++repousse === 160) kx.clearRect(0, 0, W, H); sale = true;
+      }
+    }
+    if (sale) dessineGivre();
+    majTraineau(dt);
+    if (feu) majFeu(dt);
+    if (!bh.hidden) bh.style.bottom = hA(bhX) - 8 + 'px';
+    requestAnimationFrame(boucle);
+  })(t0);
+})();
+                                                                               

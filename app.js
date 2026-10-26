@@ -168,18 +168,34 @@ function ouvreCh(s) {
   if (s.id === 'clavier') tape();
 }
 let tic = false;
+function regle(s, p) {
+  s.p = p; s.style.setProperty('--p', p.toFixed(4)); s.classList.toggle('zero', p < .02);
+  const o = p > .42;
+  if (o !== s.classList.contains('open')) { s.classList.toggle('open', o); if (o) ouvreCh(s); }
+}
+function anime(s) {
+  if (s.anim) return; s.anim = true;
+  const p0 = s.p || 0, t0 = performance.now(), dur = Math.max(1, 1800 * (1 - p0));
+  (function f(t) {
+    if (!s.anim) return;
+    const k = Math.min(1, (t - t0) / dur), e = k < .5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2;
+    regle(s, p0 + (1 - p0) * e);
+    if (k < 1) requestAnimationFrame(f);
+  })(t0);
+}
 function maj() {
   tic = false; const h = innerHeight, c = calme(); let cur = 0;
   chs.forEach((s, i) => {
-    const r = s.getBoundingClientRect(), p = c ? 1 : Math.min(1, Math.max(0, -r.top / (r.height - h)));
-    s.style.setProperty('--p', p.toFixed(4)); s.classList.toggle('zero', p < .02);
-    const o = p > .42;
-    if (o !== s.classList.contains('open')) { s.classList.toggle('open', o); if (o) ouvreCh(s); }
+    const r = s.getBoundingClientRect();
+    if (c) { s.anim = false; regle(s, 1); }
+    else if (r.top < h * .3) anime(s);
+    else if (r.top > h) { s.anim = false; regle(s, 0); }
     if (r.top < h * .5) cur = i + 1;
   });
   $('#pasN').textContent = cur;
   $$('.pt').forEach((b, i) => b.classList.toggle('on', i === cur - 1));
 }
+chs.forEach(s => $('.scene', s).addEventListener('click', () => { if (!calme()) anime(s); }));
 addEventListener('scroll', () => { if (!tic) { tic = true; requestAnimationFrame(maj); } }, { passive: true });
 addEventListener('resize', maj);
 

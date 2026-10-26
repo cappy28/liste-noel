@@ -2,40 +2,58 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Perdu sous le sapin</title>
-<meta name="theme-color" content="#254b38">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cadeau introuvable 🎄</title>
+<meta name="theme-color" content="#f3efe5">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%84%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Space+Grotesk:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Space+Grotesk:wght@400;500;700&display=swap">
 <style>
-*{box-sizing:border-box}
-body{margin:0;min-height:100svh;display:grid;place-items:center;padding:24px;font:400 1rem/1.5 "Space Grotesk",system-ui,sans-serif;color:#15171c;
-background:linear-gradient(90deg,transparent calc(50% - 20px),#b63830 calc(50% - 20px) calc(50% + 20px),transparent 0),
-linear-gradient(transparent calc(50% - 20px),#b63830 calc(50% - 20px) calc(50% + 20px),transparent 0),
-repeating-linear-gradient(45deg,#254b38 0 22px,#2b5541 22px 44px)}
-.card{position:relative;max-width:380px;padding:28px 28px 26px 48px;background:#f3efe5;text-align:left;rotate:-3deg;
-clip-path:polygon(22px 0,100% 0,100% 100%,22px 100%,0 50%);box-shadow:0 20px 40px rgba(0,0,0,.35);animation:in .8s cubic-bezier(.2,.9,.2,1) both}
-.card::before{content:"";position:absolute;left:18px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:#254b38}
-@keyframes in{from{opacity:0;transform:translateY(30px) rotate(6deg)}}
-h1{margin:0;font:800 6rem/.85 "Barlow Condensed",sans-serif;color:#b63830}
-p{margin:10px 0 20px}
-a{display:inline-flex;align-items:center;min-height:46px;padding:0 20px;border-radius:99px;background:#15171c;color:#f3efe5;font-weight:700;text-decoration:none}
-a:focus-visible{outline:3px solid #b63830;outline-offset:3px}
-@media (prefers-reduced-motion:reduce){.card{animation:none}}
+:root{--papier:#f3efe5;--encre:#1f3a2c;--doux:#5d6f63;--accent:#b63830;--ligne:rgba(31,58,44,.14);
+  --emb:radial-gradient(circle,rgba(243,239,229,.55) 0 2px,transparent 2.5px) 0 0/22px 22px,repeating-linear-gradient(45deg,#b63830 0 12px,#a52f28 12px 24px);
+  --rub:linear-gradient(90deg,#e9e0cc,#fbf6ea 50%,#e9e0cc)}
+.night{--papier:#14211a;--encre:#efe8d8;--doux:#a9b5a8;--ligne:rgba(239,232,216,.14)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--papier);color:var(--encre);font:400 18px/1.5 'Space Grotesk',system-ui,sans-serif}
+body{min-height:100svh;display:grid;place-items:center;text-align:center;padding:40px 7vw;overflow:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+main{position:relative;display:grid;gap:18px;justify-items:center;max-width:560px}
+.fond{position:absolute;left:50%;top:-6%;translate:-50% 0;z-index:-1;font:700 min(48vw,260px)/.8 'Space Grotesk';letter-spacing:-.08em;color:transparent;-webkit-text-stroke:1px var(--ligne)}
+.boite{position:relative;width:160px;height:150px;margin-bottom:10px}
+.boite>*{position:absolute}
+.corps{left:8%;right:8%;bottom:0;height:62%;z-index:2;border-radius:4px 4px 8px 8px;background:var(--emb);box-shadow:0 18px 30px -14px rgba(31,58,44,.5)}
+.corps::after,.couvercle::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:18%;translate:-50% 0;background:var(--rub)}
+.vide{left:50%;bottom:30%;translate:-50% 0;z-index:1;font:700 64px/1 Caveat,cursive;color:var(--accent);animation:sort 3.2s ease-in-out infinite}
+.couvercle{left:0;right:0;top:24%;height:20%;z-index:3;border-radius:6px;background:var(--emb);box-shadow:0 6px 12px -6px rgba(0,0,0,.4);transform-origin:8% 100%;animation:leve 3.2s ease-in-out infinite}
+.nd{position:absolute;left:50%;bottom:85%;width:70px;height:34px;translate:-50% 0;z-index:1}
+.nd::before,.nd::after{content:"";position:absolute;bottom:0;width:52%;height:100%;border:9px solid #f6efdf;border-radius:50%;box-shadow:0 3px 6px rgba(0,0,0,.2)}
+.nd::before{left:0;rotate:-18deg}.nd::after{right:0;rotate:18deg}
+@keyframes leve{0%,20%,100%{transform:none}40%,75%{transform:translateY(-34px) rotate(-14deg)}}
+@keyframes sort{0%,22%,100%{transform:translateY(40%);opacity:0}45%,72%{transform:translateY(-60%);opacity:1}}
+.sur{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.18em;color:var(--accent)}
+h1{font:700 clamp(2.4rem,11vw,4.5rem)/.92 'Space Grotesk';letter-spacing:-.045em}
+p{color:var(--doux)}
+.main{font:700 28px Caveat,cursive;color:var(--accent)}
+a{display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:0 24px;margin-top:6px;border-radius:14px;background:var(--encre);color:var(--papier);font-weight:500;text-decoration:none;transition:scale .15s}
+a:active{scale:.94}
+@media (prefers-reduced-motion:reduce){.vide,.couvercle{animation:none}}
 </style>
+<script>var h=new Date().getHours();if(/nuit/.test(location.search)||(!/jour/.test(location.search)&&(h>=20||h<6)))document.documentElement.classList.add('night')</script>
 </head>
 <body>
-<main class="card">
-  <h1>404</h1>
-  <p><strong>Ce cadeau n'est pas sous le sapin.</strong><br>Cette page n'existe pas.</p>
-  <a id="home" href="/">← Retour à ma liste</a>
+<main>
+  <span class="fond" aria-hidden="true">404</span>
+  <div class="boite" aria-hidden="true">
+    <span class="vide">?</span>
+    <div class="corps"></div>
+    <div class="couvercle"><i class="nd"></i></div>
+  </div>
+  <p class="sur">Erreur 404</p>
+  <h1>Ce cadeau n’est pas sous le sapin.</h1>
+  <p>Cette page n’existe pas… ou un lutin l’a perdue.</p>
+  <p class="main">Pas de panique, la vraie liste est par ici ↓</p>
+  <a href="/">🎁 Retour à ma liste</a>
 </main>
-<script>
-// Site GitHub de type pseudo.github.io/nom-du-depot/ : on revient à la racine du dépôt.
-var p = location.pathname.split("/").filter(Boolean);
-if (/\.github\.io$/.test(location.hostname) && p.length) document.getElementById("home").href = "/" + p[0] + "/";
-</script>
 </body>
 </html>

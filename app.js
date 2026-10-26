@@ -53,6 +53,37 @@ $$('img').forEach(img => {
 const ou = $('#img-ouvert'), ar = () => ou.naturalWidth && ou.parentNode.style.setProperty('--ar', ou.naturalWidth + '/' + ou.naturalHeight);
 ou.complete ? ar() : ou.addEventListener('load', ar);
 
+/* Enlève le fond blanc d'une image */
+function detoure(img) {
+  const go = () => {
+    if (img.dataset.det) return; img.dataset.det = 1;
+    const w = img.naturalWidth, h = img.naturalHeight, c = document.createElement('canvas');
+    c.width = w; c.height = h; const x = c.getContext('2d'); x.drawImage(img, 0, 0);
+    let d; try { d = x.getImageData(0, 0, w, h); } catch { return; }
+    const p = d.data, vu = new Uint8Array(w * h), pile = [];
+    const blanc = i => p[i * 4] > 228 && p[i * 4 + 1] > 228 && p[i * 4 + 2] > 228;
+    for (let i = 0; i < w; i++) pile.push(i, (h - 1) * w + i);
+    for (let j = 0; j < h; j++) pile.push(j * w, j * w + w - 1);
+    while (pile.length) {
+      const i = pile.pop(); if (vu[i] || !blanc(i)) continue;
+      vu[i] = 1; p[i * 4 + 3] = 0; const xx = i % w;
+      if (xx > 0) pile.push(i - 1); if (xx < w - 1) pile.push(i + 1);
+      if (i >= w) pile.push(i - w); if (i < w * (h - 1)) pile.push(i + w);
+    }
+    for (let i = 0; i < w * h; i++) {
+      if (vu[i]) continue; const xx = i % w;
+      if ((xx > 0 && vu[i - 1]) || (xx < w - 1 && vu[i + 1]) || (i >= w && vu[i - w]) || (i < w * (h - 1) && vu[i + w])) {
+        const m = (p[i * 4] + p[i * 4 + 1] + p[i * 4 + 2]) / 3;
+        if (m > 200) p[i * 4 + 3] = Math.round(255 * (255 - m) / 55);
+      }
+    }
+    x.putImageData(d, 0, 0);
+    c.toBlob(b => b && (img.src = URL.createObjectURL(b)));
+  };
+  img.complete && img.naturalWidth ? go() : img.addEventListener('load', go, { once: true });
+}
+detoure($('.ferme'));
+
 /* Son */
 let ac, son = false, musique = null;
 const actx = () => { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume?.(); return ac; };

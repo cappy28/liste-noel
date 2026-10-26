@@ -13,8 +13,9 @@ const LIENS = {
 const IMAGES = { aoc: '', ear: '' };
 const VIDEO = 'assets/video-ecran.mp4';
 const VIDEO_SECOURS = 'https://download.blender.org/durian/trailer/sintel_trailer-480p.mp4';
+// {part} et {reste} sont remplacés automatiquement par les montants
 const MOT = `Papa, Maman,
-voici ma liste de Noël. Pour le PC, je mets 600 € de ma poche : il ne reste que 250 € pour la tour.
+voici ma liste de Noël. Pour le PC, je mets {part} de ma poche : il ne reste que {reste} pour la tour.
 En échange, je promets de ne plus avoir aucun avertissement et de remplir avec le plus grand sérieux le tableau qui va être mis en place.
 Merci pour tout ♥`;
 
@@ -140,7 +141,7 @@ function horloge() {
 }
 horloge(); setInterval(horloge, 1000);
 
-/* Chapitres au scroll */
+/* Chapitres */
 const chs = $$('.ch'), pts = $('#points');
 chs.forEach((s, i) => {
   $('.scene', s).insertAdjacentHTML('beforeend', '<div class="emballage" aria-hidden="true"><i class="pg"></i><i class="pd"></i><i class="rv"></i><i class="rh"></i><i class="nd"></i></div>');
@@ -167,6 +168,8 @@ function ouvreCh(s) {
   if (s.id === 'ecran') video();
   if (s.id === 'clavier') tape();
 }
+
+/* Déballage automatique */
 let tic = false;
 function regle(s, p) {
   s.p = p; s.style.setProperty('--p', p.toFixed(4)); s.classList.toggle('zero', p < .02);
@@ -199,6 +202,43 @@ chs.forEach(s => $('.scene', s).addEventListener('click', () => { if (!calme()) 
 addEventListener('scroll', () => { if (!tic) { tic = true; requestAnimationFrame(maj); } }, { passive: true });
 addEventListener('resize', maj);
 
+/* Texte d'aide */
+$$('.indice').forEach(e => e.textContent = 'Touche le cadeau 🎁');
+
+/* Un cadeau par scroll */
+const pages = [$('#haut'), ...chs, $('#liste')], fin = $('#liste');
+let bloque = 0, ty = null, glisse = false;
+const ici = () => pages.reduce((b, p, i) => Math.abs(p.offsetTop - scrollY) < Math.abs(pages[b].offsetTop - scrollY) ? i : b, 0);
+function dans(sens) {
+  if ($('#zoom').open || !root.classList.contains('pret')) return false;
+  const y = scrollY, f = fin.offsetTop;
+  return !(y > f + 5 || (y >= f - 5 && sens > 0));
+}
+function pagine(sens) {
+  const now = performance.now();
+  if (now < bloque) { bloque = Math.max(bloque, now + 150); return; }
+  const i = Math.max(0, Math.min(pages.length - 1, ici() + sens));
+  bloque = now + 850; vibre(8);
+  scrollTo({ top: pages[i].offsetTop, behavior: calme() ? 'auto' : 'smooth' });
+}
+addEventListener('wheel', e => {
+  if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
+  const s = Math.sign(e.deltaY); if (!s || !dans(s)) return;
+  e.preventDefault(); pagine(s);
+}, { passive: false });
+addEventListener('touchstart', e => { ty = e.touches[0].clientY; glisse = false; }, { passive: true });
+addEventListener('touchmove', e => {
+  if (ty === null || e.touches.length > 1) return;
+  const dy = ty - e.touches[0].clientY, s = Math.sign(dy) || 1;
+  if (!dans(s)) return;
+  e.preventDefault();
+  if (!glisse && Math.abs(dy) > 12) { glisse = true; pagine(s); }
+}, { passive: false });
+addEventListener('keydown', e => {
+  const s = { ArrowDown: 1, PageDown: 1, ' ': 1, ArrowUp: -1, PageUp: -1 }[e.key];
+  if (s && dans(s) && !e.target.closest('input,textarea')) { e.preventDefault(); pagine(s); }
+});
+
 /* Neige (début et fin seulement) */
 const cv = $('#neige'), cx = cv.getContext('2d'), zones = new Set();
 let fl = [], neigeOn = false, dore = 0, tn = 0, W, Hh, dpr;
@@ -227,7 +267,7 @@ ion.observe($('#haut')); ion.observe($('#liste'));
 
 /* Finale */
 let wi = 0;
-$('#mot').innerHTML = MOT.split('\n').map(l => l.split(' ').map(w => `<span style="--i:${wi++}">${w}</span>`).join(' ')).join('<br>');
+$('#mot').innerHTML = MOT.replace(/\{(\w+)\}/g, (_, k) => eur(V[k]).replace(' ', '\u00a0')).split('\n').map(l => l.split(' ').map(w => `<span style="--i:${wi++}">${w}</span>`).join(' ')).join('<br>');
 $('#sig').textContent = SIGNATURE;
 $('.signature').style.setProperty('--d', wi * 55 + 600 + 'ms');
 const io = new IntersectionObserver(es => es.forEach(e => {
@@ -294,3 +334,4 @@ $('#anim').onclick = () => { localStorage.setItem('motion', calme() ? 'on' : 'of
 reduit.addEventListener?.('change', appliqueCalme);
 appliqueCalme();
 })();
+ 

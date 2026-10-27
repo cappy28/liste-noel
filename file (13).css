@@ -1,0 +1,379 @@
+/* ===== BOUTON DANS LA SECTION TOUR ===== */
+
+.pc-launch {
+  display: block;
+  width: 100%;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  color: var(--t);
+  background: none;
+}
+
+.pc-launch img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 30svh;
+  margin: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 20px #0007);
+}
+
+.pc-launch span {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 10px 16px;
+  border: 1px solid var(--or);
+  border-radius: 999px;
+  color: var(--or);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pc-launch:hover span {
+  background: #e3b65b18;
+}
+
+html.pc-modal-open {
+  overflow: hidden;
+  scroll-snap-type: none;
+}
+
+/* ===== FENÊTRE D’EXPLORATION ===== */
+
+#pcExplorer {
+  width: min(1120px, 96vw);
+  max-width: 96vw;
+  max-height: 94dvh;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: var(--t);
+  background: #101a16;
+  border: 1px solid #ffffff24;
+  border-radius: 24px;
+  box-shadow: 0 35px 120px #000a;
+}
+
+#pcExplorer::backdrop {
+  background: #030806e8;
+  backdrop-filter: blur(12px);
+}
+
+#pcExplorer .pc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid #ffffff16;
+}
+
+#pcExplorer #pcTitle {
+  margin: 0;
+  font: 800 25px/1.15 Fraunces, serif;
+}
+
+#pcExplorer .pc-intro {
+  margin-top: 6px;
+  color: var(--mut);
+  font-size: 13px;
+}
+
+#pcExplorer .pc-close {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #ffffff30;
+  border-radius: 50%;
+  background: #ffffff09;
+  font-size: 24px;
+}
+
+#pcExplorer .pc-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+  gap: 24px;
+  padding: 20px;
+}
+
+#pcExplorer .pc-visual,
+#pcExplorer .pc-sidebar {
+  min-width: 0;
+}
+
+/* ===== SCÈNE ET ZOOM ===== */
+
+#pcExplorer .pc-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 518 / 451;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #ffffff15;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at center, #26322c, #080d0a 75%);
+}
+
+#pcExplorer .pc-camera {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  transform:
+    translate(var(--pc-x, 0%), var(--pc-y, 0%))
+    scale(var(--pc-zoom, 1));
+  transition: transform 850ms cubic-bezier(.2, .8, .2, 1);
+}
+
+#pcExplorer .pc-inside {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+}
+
+/*
+  Le panneau utilise ta photo comme texture.
+  Le découpage suit approximativement le flanc du boîtier.
+*/
+
+#pcExplorer .pc-door {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    #252729
+    url("assets/panneau-pc.png") center / 125% 125% no-repeat;
+  clip-path: polygon(
+    8.6% 13.8%,
+    77% 13%,
+    77% 93.4%,
+    8.6% 91%
+  );
+  transition:
+    transform 950ms cubic-bezier(.25, .8, .25, 1),
+    opacity 650ms ease;
+}
+
+#pcExplorer .pc-stage.is-open .pc-door {
+  transform: translate(-90%, -4%) rotate(-7deg);
+  opacity: 0;
+}
+
+/* ===== REPÈRES ===== */
+
+#pcExplorer .pc-points {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+#pcExplorer .pc-stage.is-open .pc-points {
+  visibility: visible;
+  opacity: 1;
+}
+
+#pcExplorer .pc-point {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  transform:
+    translate(-50%, -50%)
+    scale(var(--pc-inverse, 1));
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #10201a;
+  background: var(--or);
+  box-shadow: 0 0 0 6px #e3b65b25, 0 5px 20px #0009;
+  font: 800 14px Inter, sans-serif;
+}
+
+#pcExplorer .pc-point[aria-pressed="true"] {
+  background: #fff;
+  box-shadow: 0 0 0 8px #e3b65b50;
+}
+
+#pcExplorer button:focus-visible,
+.pc-launch:focus-visible {
+  outline: 3px solid var(--or);
+  outline-offset: 4px;
+}
+
+/* ===== COMMANDES ===== */
+
+#pcExplorer .pc-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+#pcExplorer .pc-control {
+  min-height: 44px;
+  padding: 10px 15px;
+  border: 1px solid #ffffff28;
+  border-radius: 999px;
+  background: #ffffff08;
+  font-size: 14px;
+}
+
+#pcExplorer button:disabled {
+  cursor: not-allowed;
+  opacity: .4;
+}
+
+#pcExplorer .pc-disclaimer {
+  margin-top: 12px;
+  color: var(--mut);
+  font-size: 12px;
+}
+
+/* ===== LISTE DES PIÈCES ===== */
+
+#pcExplorer .pc-subtotal {
+  margin-bottom: 14px;
+  color: var(--or);
+  font-weight: 800;
+  font-size: 15px;
+}
+
+#pcExplorer .pc-list {
+  display: grid;
+  gap: 7px;
+}
+
+#pcExplorer .pc-part {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #ffffff19;
+  border-radius: 12px;
+  text-align: left;
+  background: #ffffff05;
+  font-size: 14px;
+}
+
+#pcExplorer .pc-part strong {
+  flex: 0 0 auto;
+  color: var(--or);
+  font-size: 12px;
+}
+
+#pcExplorer .pc-part[aria-pressed="true"] {
+  border-color: var(--or);
+  background: #e3b65b15;
+}
+
+/* ===== FICHE DU COMPOSANT ===== */
+
+#pcExplorer .pc-detail {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid #ffffff1d;
+  border-radius: 16px;
+  background: #0003;
+}
+
+#pcExplorer .pc-detail h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+#pcExplorer .pc-price {
+  margin-bottom: 10px;
+  color: var(--or);
+  font-weight: 800;
+}
+
+#pcExplorer .pc-note {
+  color: var(--mut);
+  font-size: 14px;
+}
+
+#pcExplorer .pc-schema-caption {
+  margin-top: 12px;
+  color: var(--mut);
+  text-align: center;
+  font-size: 11px;
+}
+
+/* Illustrations explicatives des composants cachés. */
+
+#pcExplorer .pc-schematic {
+  display: grid;
+  place-items: center;
+  width: 140px;
+  aspect-ratio: 1;
+  margin: 22px auto 0;
+  padding: 12px;
+  border: 9px solid #8e969c;
+  outline: 5px solid #365145;
+  color: #17201c;
+  background: linear-gradient(135deg, #eee, #9ba3a5);
+  text-align: center;
+  white-space: pre-line;
+  font: 800 15px/1.4 Inter, sans-serif;
+}
+
+#pcExplorer .pc-schematic[data-kind="ssd"],
+#pcExplorer .pc-schematic[data-kind="psu"] {
+  width: 180px;
+  aspect-ratio: 1.6;
+  border: 3px solid #66736c;
+  outline: none;
+  border-radius: 8px;
+  color: #eee;
+  background: linear-gradient(135deg, #303735, #111715);
+}
+
+#pcExplorer .pc-schematic[data-kind="psu"] {
+  aspect-ratio: 1.35;
+}
+
+/* ===== MOBILE / ACCESSIBILITÉ ===== */
+
+@media (max-width: 760px) {
+  #pcExplorer .pc-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 14px;
+  }
+
+  #pcExplorer .pc-header {
+    padding: 16px;
+  }
+
+  #pcExplorer .pc-stage {
+    max-width: 540px;
+    margin: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #pcExplorer * {
+    transition: none !important;
+  }
+}
+
+@media print {
+  .pc-launch span {
+    display: none;
+  }
+}

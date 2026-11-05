@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr" class="bloque">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ma liste de Noël 🎁</title>
+  <meta name="theme-color" content="#10201a">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,800&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+
+  <script src="app.js" defer></script>
+  <script src="pc.js" defer></script>
+</head>
+<body>
+  <canvas id="neige" aria-hidden="true"></canvas>
+
+  <!-- Intro -->
+  <div id="intro">
+    <button class="boite" id="boite" type="button" aria-label="Ouvrir le cadeau">
+      <span class="couvercle"></span>
+      <span class="corps"></span>
+      <span class="rv"></span>
+      <span class="noeud"></span>
+    </button>
+    <p class="tire">Tire sur le ruban</p>
+  </div>
+
+  <!-- En-tête -->
+  <header class="tete">
+    <button class="boule" id="boule" type="button" aria-label="Boule de Noël"></button>
+    <p class="sur">Liste de Noël · <span id="annee"></span></p>
+    <h1>Quatre cadeaux<br>à déballer.</h1>
+    <div class="horloge" id="horloge"></div>
+    <nav class="sommaire" id="sommaire" aria-label="Les cadeaux"></nav>
+  </header>
+
+  <main>
+    <svg id="ruban" aria-hidden="true"><path></path></svg>
+
+    <!-- Les sections .ch sont générées par app.js à partir de CADEAUX -->
+
+    <section class="fin" id="liste">
+      <h2 data-vu>Joyeux<br>Noël</h2>
+
+      <button class="enveloppe" id="enveloppe" type="button" data-vu aria-label="Ouvrir la lettre">
+        <span class="env"></span>
+        <span class="feuille"></span>
+        <span class="devant"></span>
+        <span class="rabat"></span>
+        <span class="cachet"><i></i><i></i></span>
+        <em>Touche le cachet</em>
+      </button>
+
+      <div class="lettre" id="lettre" hidden>
+        <p id="mot"></p>
+        <svg class="signature" viewBox="0 0 400 100">
+          <text id="sig" x="200" y="72" text-anchor="middle"></text>
+        </svg>
+      </div>
+
+      <div class="suivi" id="suivi" hidden>
+        <p class="direct"><i></i>En direct d’École Directe · <span id="majEd"></span></p>
+        <div class="moy"><span id="moy">0,00</span><small>/20</small></div>
+        <p class="obj" id="obj"></p>
+        <svg class="courbe" id="courbe" viewBox="0 0 300 110"></svg>
+        <div class="jours"><b id="jours">0</b><span id="joursTxt"></span></div>
+      </div>
+
+      <figure class="polaroid" data-vu>
+        <img id="photo" alt="Mon futur setup">
+        <figcaption id="legende"></figcaption>
+      </figure>
+
+      <div class="caisse" data-vu>
+        <div class="imprimante"><i></i></div>
+        <div id="ticket"></div>
+      </div>
+
+      <p class="astuce" id="astuce"></p>
+
+      <div class="actions" id="actions">
+        <button class="aim" id="copier" type="button">Copier</button>
+        <button class="aim" id="partager" type="button">Partager</button>
+        <a class="aim" id="wa" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="aim" id="sms">SMS</a>
+        <button class="aim" id="imprimer" type="button">Imprimer</button>
+      </div>
+
+      <button class="remonter aim" id="remonter" type="button">↑ Remonter</button>
+    </section>
+  </main>
+
+  <!-- Barre flottante -->
+  <nav class="pilule" aria-label="Commandes du site">
+    <button id="platine" class="aim" type="button" aria-label="Musique"><span class="vinyle"></span></button>
+    <span class="compteur">
+      <span class="guirlande" id="guirlande"></span>
+      <b id="nb">0/4</b>
+    </span>
+    <button id="anim" class="aim" type="button" aria-label="Animations">✦</button>
+    <button id="menuBtn" class="aim" type="button" aria-label="Menu" aria-controls="menu" aria-expanded="false">☰</button>
+  </nav>
+  <div class="menu" id="menu"></div>
+
+  <dialog id="zoom" aria-label="Image agrandie"><img id="zoomImg" alt=""></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
